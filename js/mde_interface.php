@@ -39,7 +39,7 @@ if (file_exists($autoloader)) {
     require_once $autoloader;
 // else error, classes can't be found
 } else {
-    die('A PHP namespaces autoloader can not be found while using the MDE-editor interface!');
+    trigger_error('A PHP namespaces autoloader can not be found while using the MDE-editor interface!', E_USER_ERROR);
 }
 
 // get MDE options
@@ -62,7 +62,7 @@ try {
         .$mde_content->getBody().PHP_EOL
         .$mde_content->getNotesToString();
 } catch (\Exception $e) {
-    echo "error - ".$e->getMessage()." [".get_class($e)." in ".$e->getFile()."::".$e->getLine()."]";
+    trigger_error("exception - ".$e->getMessage()." [".get_class($e)." in ".$e->getFile()."::".$e->getLine()."]", E_USER_ERROR);
 }
 
 exit(0);

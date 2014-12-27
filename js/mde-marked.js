@@ -10,6 +10,9 @@
 
 ;(function (window, undefined) {
 
+/**
+ * Store the MDE parser options
+ */
 var mdeparser_options;
 
 /**
@@ -23,10 +26,9 @@ function MdeEpicEditor(options) {
         mde_options,
         opts = options || {},
         defaults = {
-            container: 'mde-epiceditor',
-            textarea: 'mde-content',
-            basePath: 'bower_components/epiceditor/epiceditor/',
-            parser: mde_marked,
+            container:  'mde-epiceditor',
+            basePath:   'bower_components/epiceditor/epiceditor/',
+            parser:     mde_marked,
             file: {
                 name: 'mde-epiceditor',
                 defaultContent: 'Type your *markdown*-**extended** content here ...',
@@ -34,23 +36,24 @@ function MdeEpicEditor(options) {
             },
             autogrow: true,
             parser_options: {
-                silent: false,
-                interface: 'js/mde_interface.php',
+                silent:      false,
+                interface:   'js/mde_interface.php',
                 mde_options: {},
-                autoloader: '../vendor/autoload.php'
+                autoloader:  '../vendor/autoload.php'
             }
         };
 
-    mde_options = merge(defaults, opts);
-//    console.debug('initializing MdeEpicEditor with options', mde_options);
+    mde_options = merge({}, defaults, opts);
+//    console.debug('mdeparser options:', mde_options.parser_options);
     mdeparser_options = mde_options.parser_options;
+//    console.debug('initializing MdeEpicEditor with options', mde_options);
     _this = new EpicEditor(mde_options);
     return _this;
 }
 
 /**
  * Recursive merge of objects
- * @param obj1 obj2 obj3 ...
+ * @param obj obj2 obj3 ...
  * @returns {*}
  */
 function merge(obj) {
@@ -73,54 +76,59 @@ function merge(obj) {
 }
 
 /**
- * MDE parser AJAX request
- * @param src
- * @param opt
- * @returns {*}
+ * Creation of the AJAX request
+ * @returns {ActiveXObject|*}
  */
-function mde_marked(src, opt) {
-    var ajax_response = null,
-        xhr;
+function createRequest() {
     try {
+        xhr = new ActiveXObject('Msxml2.XMLHTTP');
+    } catch (err2) {
         try {
-            xhr = new ActiveXObject('Msxml2.XMLHTTP');
-        } catch (err2) {
+            xhr = new ActiveXObject('Microsoft.XMLHTTP');
+        } catch (err3) {
             try {
-                xhr = new ActiveXObject('Microsoft.XMLHTTP');
-            } catch (err3) {
-                try {
-                    xhr = new XMLHttpRequest();
-                } catch (err1) {
-                    xhr = false;
-                }
+                xhr = new XMLHttpRequest();
+            } catch (err1) {
+                throw 'Can not initiate XHR request!';
             }
         }
+    }
+    return xhr;
+}
+
+/**
+ * MDE parser AJAX request
+ * @param src
+ * @returns {*}
+ */
+function mde_marked (src) {
+    var ajax_response = src,
+        opts = mdeparser_options,
+        xhr,
+        data;
+    try {
+        xhr = createRequest();
         if (xhr) {
             xhr.onreadystatechange  = function() {
                 if (xhr.readyState  == 4) {
                     if (xhr.status  == 200) {
                         ajax_response = xhr.responseText;
                     } else {
-                        console.log("Error on XHR request [code " + xhr.status + "]");
-                        ajax_response = src;
+                        throw "Error on XHR request [code " + xhr.status + "]";
                     }
                 }
             };
-            xhr.open("POST", mdeparser_options.interface,  false);
+            data = "autoloader=" + encodeURIComponent(opts.autoloader) + "&"
+                + "options=" + encodeURIComponent(JSON.stringify(opts.mde_options)) + "&"
+                + "source=" + encodeURIComponent(src);
+//            console.debug('sending data to interface '+opts.interface, data);
+            xhr.open("POST", opts.interface,  false);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.send(
-                "autoloader=" + encodeURIComponent(mdeparser_options.autoloader)
-                + "&"
-                + "options=" + encodeURIComponent(JSON.stringify(mdeparser_options.mde_options))
-                + "&"
-                + "source=" + encodeURIComponent(src)
-            );
-        } else {
-            ajax_response = 'ERROR - Can not initiate XHR request!';
+            xhr.send(data);
         }
     } catch (e) {
-        if ((opt || mdeparser_options).silent) {
-            return 'An error occured:\n' + e.message;
+        if (opts.silent) {
+            return "An error occured:\n" + e.message;
         }
         throw e;
     }
