@@ -1,7 +1,7 @@
 MDE-Editor
 ==========
 
-A web editor for Markdown-Extended syntax.
+**A web editor for Markdown-Extended (*MDE*) syntax.**
 
 This editor is a custom version of the original [EpicEditor](http://epiceditor.com/)
 to use the [PHP MarkdownExtended](http://github.com/piwi/markdown-extended) parser.
@@ -30,17 +30,17 @@ Usage of the **MDE-Editor** is very similar to the one of [EpicEditor](http://ep
 except that you must create a `MdeEpicEditor` object:
  
     var editor = new MdeEpicEditor().load();
-    // or with options:
-    var editor = new MdeEpicEditor().load({
-        options ...
-    });
+
+And the default ID of the DOM block which will finally embed the editor is `mde-expiceditor`:
+
+    <div id="mde-epiceditor"></div>
 
 
 Options
 -------
 
-The default options of the **MDE-Editor**, merged with the [default EpicEditor options](http://epiceditor.com/#epiceditoroptions),
-are:
+The default options of the **MDE-Editor** are (they will be merged with the 
+[default EpicEditor options](http://epiceditor.com/#epiceditoroptions) in final object):
 
         container: 'mde-epiceditor',
         textarea: 'mde-content',
@@ -59,13 +59,17 @@ are:
             autoloader: '../vendor/autoload.php'
         }
 
-The last `parser_options` element concerns the MDE parser. The `parser_options.mde_options` entry
-is a table of options passed to the [PHP-MarkdownExtended](https://github.com/piwi/markdown-extended#php-script-usage) 
-parser to let you make custom parsings. The `parser_options.autoloader` is the path to the PHP autoloader
-file, relative to the source `js/mde_interface.php`.
+The last `parser_options` element concerns the MDE parser:
+
+-   the `parser_options.autoloader` is the path to the PHP autoloader file,
+    relative to the source file `js/mde_interface.php`;
+
+-   the `parser_options.mde_options` entry is a table of options passed to the 
+    [PHP-MarkdownExtended](https://github.com/piwi/markdown-extended#php-script-usage) 
+    parser to let you make custom parsings.
 
 
-Support
+License
 -------
 
 **MDE-Editor** is authored by Pierre Cassat and licensed under a MIT license.
