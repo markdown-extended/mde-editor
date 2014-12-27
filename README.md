@@ -45,7 +45,6 @@ The default options of the **MDE-Editor** are (they will be merged with the
         container: 'mde-epiceditor',
         textarea: 'mde-content',
         basePath: 'bower_components/epiceditor/epiceditor/',
-        parser: mde_marked,
         file: {
             name: 'mde-epiceditor',
             defaultContent: 'Type your *markdown*-**extended** content here ...',
