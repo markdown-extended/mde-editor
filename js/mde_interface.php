@@ -55,7 +55,7 @@ $posted = str_replace('&gt;', '>', $posted);
 $posted = str_replace('&lt;', '<', $posted);
 try {
     $mde_content = \MarkdownExtended\MarkdownExtended::create()
-        ->transformString($posted, (isset($mde_options) ? $mde_options : $options));
+        ->transformString($posted, $options);
     //var_export($mde_content);
     echo
         $mde_content->getMetadataToString().PHP_EOL
