@@ -44,11 +44,12 @@
     </form>
 
     <div class="jumbotron">
-        <p>This is a demo of <a href="http://github.com/piwi/mde-editor">MDE editor</a>. Built with the help of the following tools:</p>
+        <p>This is a demo of <a href="http://github.com/piwi/mde-editor">MDE editor</a>, built with the help of the following tools:</p>
         <ul>
-            <li><a href="http://epiceditor.com/">EpicEditor</a></li>
-            <li><a href="http://github.com/piwi/markdown-extended">PHP MarkdownExtended</a></li>
+            <li class="lead"><a href="http://epiceditor.com/">EpicEditor</a></li>
+            <li class="lead"><a href="http://github.com/piwi/markdown-extended">PHP MarkdownExtended</a></li>
         </ul>
+        <p>The demo is built with the help of <a href="http://getbootstrap.com">Bootstrap</a>.</p>
     </div>
 
 </div>
@@ -58,10 +59,8 @@
 <script>
 (function() {
 
-    var textarea = document.getElementById('mde-content');
-
     var opts = {
-        textarea: textarea,
+        textarea: document.getElementById('mde-content'),
         localStorageName: 'mde-epiceditor',
         theme: {
             base: 'themes/base/epiceditor.css',
@@ -72,6 +71,11 @@
             minHeight: 200,
             maxHeight: false,
             scroll: true
+        },
+        parser_options: {
+            mde_options: {
+//                config_file: 'markdown_config.simple.ini'
+            }
         }
     };
 
