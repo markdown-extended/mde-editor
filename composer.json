@@ -1,0 +1,14 @@
+{
+    "name": "piwi/mde-editor",
+    "description": "MarkdownExtended web editor (based on EpicEditor)",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "piwi",
+            "email": "me@e-piwi.fr"
+        }
+    ],
+    "require": {
+        "piwi/markdown-extended": "dev-master"
+    }
+}

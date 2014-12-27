@@ -1,0 +1,19 @@
+{
+  "name": "mde-editor",
+  "version": "0.0.0",
+  "authors": [
+    "piwi <me@e-piwi.fr>"
+  ],
+  "description": "MarkdownExtended web editor (based on EpicEditor)",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "epiceditor": "~0.2.3"
+  }
+}
