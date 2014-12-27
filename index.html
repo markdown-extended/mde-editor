@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <title>Demonstration of the MDE-EpicEditor</title>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<style>
+#mde-epiceditor-wrapper {
+    background-color: #fff;
+    border-color: #ddd;
+    border-radius: 4px 4px 0 0;
+    border-width: 1px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05) inset;
+    margin-left: 0;
+    margin-right: 0;
+    border-style: solid;
+    padding: 0px;
+    position: relative;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="page-header">
+        <h1>MDE-EpicEditor <small>a markdown-extended web editor</small></h1>
+    </div>
+
+    <form name="mde_form" id="mde_form">
+        <div class="form-group">
+            <textarea class="form-control" rows="3" style="display:none;" name="mde-content" id="mde-content"></textarea>
+            <div id="mde-epiceditor-wrapper">
+                <div id="mde-epiceditor"></div>
+            </div>
+        </div>
+    </form>
+
+    <div class="jumbotron">
+        <p>This is a demo of <a href="http://github.com/piwi/mde-editor">MDE editor</a>. Built with the help of the following tools:</p>
+        <ul>
+            <li><a href="http://epiceditor.com/">EpicEditor</a></li>
+            <li><a href="http://github.com/piwi/markdown-extended">PHP MarkdownExtended</a></li>
+        </ul>
+    </div>
+
+</div>
+
+    <script src="bower_components/epiceditor/epiceditor/js/epiceditor.min.js"></script>
+    <script src="js/mde-marked.js"></script>
+<script>
+(function() {
+
+    var textarea = document.getElementById('mde-content');
+
+    var opts = {
+        textarea: textarea,
+        localStorageName: 'mde-epiceditor',
+        theme: {
+            base: 'themes/base/epiceditor.css',
+            preview: 'themes/preview/github.css',
+            editor: 'themes/editor/epic-dark.css'
+        },
+        autogrow: {
+            minHeight: 200,
+            maxHeight: false,
+            scroll: true
+        }
+    };
+
+    var editor = new MdeEpicEditor(opts);
+
+    editor.load(function () {
+        console.log("MDE-EpicEditor is loaded")
+    });
+
+})();
+</script>
+
+</body>
+</html>
