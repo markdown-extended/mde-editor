@@ -12,7 +12,7 @@
     <title>Demonstration of the MDE-EpicEditor</title>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 <style>
-#mde-epiceditor-wrapper {
+#mde-editor-wrapper {
     background-color: #fff;
     border-color: #ddd;
     border-radius: 4px 4px 0 0;
@@ -28,40 +28,46 @@
 </head>
 <body>
 
+<a href="https://github.com/piwi/mde-editor"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
+
 <div class="container">
 
     <div class="page-header">
-        <h1>MDE-EpicEditor <small>a markdown-extended web editor</small></h1>
+        <h1>MDE-EpicEditor <small><em>a markdown-extended web editor</em></small></h1>
+    </div>
+
+    <div>
+        <p>This is a demo of <a href="http://github.com/piwi/mde-editor">MDE editor</a>, built with the help of the following tools:
+            <a href="http://epiceditor.com/">EpicEditor</a> and
+            <a href="http://github.com/piwi/markdown-extended">PHP MarkdownExtended</a>.
+        </p>
+        <p>The demo is built with the help of <a href="http://getbootstrap.com">Bootstrap</a> (not required for the editor).</p>
     </div>
 
     <form name="mde_form" id="mde_form">
         <div class="form-group">
             <textarea class="form-control" rows="3" style="display:none;" name="mde-content" id="mde-content"></textarea>
-            <div id="mde-epiceditor-wrapper">
-                <div id="mde-epiceditor"></div>
+            <div id="mde-editor-wrapper">
+                <div id="mde-editor"></div>
             </div>
         </div>
     </form>
 
-    <div class="jumbotron">
-        <p>This is a demo of <a href="http://github.com/piwi/mde-editor">MDE editor</a>, built with the help of the following tools:</p>
-        <ul>
-            <li class="lead"><a href="http://epiceditor.com/">EpicEditor</a></li>
-            <li class="lead"><a href="http://github.com/piwi/markdown-extended">PHP MarkdownExtended</a></li>
-        </ul>
-        <p>The demo is built with the help of <a href="http://getbootstrap.com">Bootstrap</a>.</p>
+    <div class="well well-sm text-right text-muted small">
+        <p><strong>MDE-Editor</strong> is authored by <a href="http://github.com/piwi">@piwi</a> and licensed under the <a href="https://github.com/piwi/mde-editor/blob/master/LICENSE">MIT license</a>.</p>
+        <p>Original sources are available at <a href="http://github.com/piwi/mde-editor">github.com/piwi/mde-editor</a>.</p>
     </div>
 
 </div>
 
     <script src="bower_components/epiceditor/epiceditor/js/epiceditor.min.js"></script>
-    <script src="js/mde-marked.js"></script>
+    <script src="mde-editor/mde-editor.js"></script>
 <script>
 (function() {
 
     var opts = {
         textarea: document.getElementById('mde-content'),
-        localStorageName: 'mde-epiceditor',
+        localStorageName: 'mde-editor',
         theme: {
             base: 'themes/base/epiceditor.css',
             preview: 'themes/preview/github.css',
