@@ -6,7 +6,7 @@ MDE-Editor
 This editor is a custom version of the original [EpicEditor](http://epiceditor.com/)
 to use the [PHP MarkdownExtended](http://github.com/piwi/markdown-extended) parser.
 It uses a PHP interface to post the markdown content of the editor (via a **synchronous**
-AJAX request).
+XMLHttpRequest).
 
 
 Installation
