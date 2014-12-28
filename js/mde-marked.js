@@ -112,7 +112,13 @@ function mde_marked (src) {
             xhr.onreadystatechange  = function() {
                 if (xhr.readyState  == 4) {
                     if (xhr.status  == 200) {
-                        ajax_response = xhr.responseText;
+                        var response = JSON.parse(xhr.response);
+//                        console.debug('receiving response from interface ', response);
+                        if (response.status === 0) {
+                            ajax_response = response.content;
+                        } else {
+                            console.error("Error on XHR response:\n" + response.error.join('\n'));
+                        }
                     } else {
                         throw "Error on XHR request [code " + xhr.status + "]";
                     }
