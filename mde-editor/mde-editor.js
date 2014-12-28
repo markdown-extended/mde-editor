@@ -13,7 +13,7 @@
 /**
  * Store the MDE parser options
  */
-var mdeparser_options;
+var mde_editor_options;
 
 /**
  * Initiates the special EpicEditor object
@@ -26,26 +26,27 @@ function MdeEpicEditor(options) {
         mde_options,
         opts = options || {},
         defaults = {
-            container:  'mde-epiceditor',
+            parser:     mde_editor,
+            container:  'mde-editor',
             basePath:   'bower_components/epiceditor/epiceditor/',
-            parser:     mde_marked,
+            autogrow:   true,
             file: {
-                name: 'mde-epiceditor',
+                name:           'mde-editor',
                 defaultContent: 'Type your *markdown*-**extended** content here ...',
-                autoSave: 5000
+                autoSave:       5000
             },
-            autogrow: true,
             parser_options: {
                 silent:      false,
-                interface:   'js/mde_interface.php',
+                interface:   'mde-editor/mde_editor_interface.php',
                 mde_options: {},
                 autoloader:  '../vendor/autoload.php'
             }
         };
 
     mde_options = merge({}, defaults, opts);
-//    console.debug('mdeparser options:', mde_options.parser_options);
-    mdeparser_options = mde_options.parser_options;
+    mde_editor_options = mde_options.parser_options;
+//    console.debug('mde_editor options:', mde_editor_options);
+    delete mde_options.parser_options;
 //    console.debug('initializing MdeEpicEditor with options', mde_options);
     _this = new EpicEditor(mde_options);
     return _this;
@@ -101,9 +102,9 @@ function createRequest() {
  * @param src
  * @returns {*}
  */
-function mde_marked (src) {
-    var ajax_response = src,
-        opts = mdeparser_options,
+function mde_editor (src) {
+    var ajax_response = src.replace(/(?:\r\n|\r|\n)/g, '<br />'),
+        opts = mde_editor_options,
         xhr,
         data;
     try {
