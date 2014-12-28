@@ -1,12 +1,12 @@
 MDE-Editor
 ==========
 
-**A web editor for Markdown-Extended (*MDE*) syntax.**
+**A web editor for the Markdown-Extended (*MDE*) syntax.**
 
 This editor is a custom version of the original [EpicEditor](http://epiceditor.com/)
 to use the [PHP MarkdownExtended](http://github.com/piwi/markdown-extended) parser.
 It uses a PHP interface to post the markdown content of the editor (via a **synchronous**
-XMLHttpRequest).
+XMLHttpRequest) at each run (the original content is not parsed in JavaScript).
 
 
 Installation
@@ -27,13 +27,23 @@ Usage
 -----
 
 Usage of the **MDE-Editor** is very similar to the one of [EpicEditor](http://epiceditor.com/#quick-start)
-except that you must create a `MdeEpicEditor` object:
+except that:
+
+- you must include the `mde-editor.js` script AFTER the original `epiceditor(.min).js`:
+
+        <script src="mde-editor/mde-editor.js"></script>
+
+- you must create a `MdeEpicEditor` object instead of the original `EpicEditor`:
  
-    var editor = new MdeEpicEditor().load();
+        var editor = new MdeEpicEditor().load();
 
-And the default ID of the DOM block which will finally embed the editor is `mde-expiceditor`:
+- the default ID of the DOM block which will finally embed the editor is `mde-editor`:
 
-    <div id="mde-epiceditor"></div>
+        <div id="mde-editor"></div>
+
+If you move the package files, you NEED to keep the `mde_editor_interface.php` PHP script
+in the same directory as the `mde-editor.js` (or override the `parser_options` settings - 
+see below) and redefine the `basePath` option to fit your environment.
 
 
 Options
@@ -42,26 +52,25 @@ Options
 The default options of the **MDE-Editor** are (they will be merged with the 
 [default EpicEditor options](http://epiceditor.com/#epiceditoroptions) in final object):
 
-        container: 'mde-epiceditor',
-        textarea: 'mde-content',
-        basePath: 'bower_components/epiceditor/epiceditor/',
+        container:  'mde-editor',
+        basePath:   'bower_components/epiceditor/epiceditor/',
+        autogrow:   true,
         file: {
-            name: 'mde-epiceditor',
+            name:           'mde-editor',
             defaultContent: 'Type your *markdown*-**extended** content here ...',
-            autoSave: 5000
+            autoSave:       5000
         },
-        autogrow: true,
         parser_options: {
-            silent: false,
-            interface: 'js/mde_interface.php',
+            silent:      false,
+            interface:   'mde-editor/mde_editor_interface.php',
             mde_options: {},
-            autoloader: '../vendor/autoload.php'
+            autoloader:  '../vendor/autoload.php'
         }
 
 The last `parser_options` element concerns the MDE parser:
 
--   the `parser_options.autoloader` is the path to the PHP autoloader file,
-    relative to the source file `js/mde_interface.php`;
+-   the `parser_options.autoloader` is the path to the PHP *autoloader* file,
+    **relative** to the source file `mde_editor_interface.php`;
 
 -   the `parser_options.mde_options` entry is a table of options passed to the 
     [PHP-MarkdownExtended](https://github.com/piwi/markdown-extended#php-script-usage) 
