@@ -94,8 +94,9 @@ body {
             maxHeight: false,
             scroll: true
         },
-        parser_options: {
-            mde_options: {
+        parserOptions: {
+//            interface: 'online', // use this to use the webservice at <http://api.aboutmde.org/> instead of local one
+            mdeOptions: {
 //                config_file: 'markdown_config.simple.ini'
             }
         }
@@ -103,7 +104,7 @@ body {
 
     var editor = new MdeEpicEditor(opts);
 
-    editor.load(function () {
+    editor.load(function() {
         console.log("MDE-EpicEditor is loaded")
     });
 

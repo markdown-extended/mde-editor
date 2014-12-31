@@ -95,19 +95,24 @@ redefine the <code>$autoloader</code> variable at the top of the <code>mde_edito
         defaultContent: 'Type your *markdown*-**extended** content here ...',
         autoSave:       5000
     },
-    parser_options: {
+    parserOptions: {
         silent:      false,
         interface:   'mde-editor/mde_editor_interface.php',
-        mde_options: {}
+        mdeOptions: {}
     }</pre>
-<p>The last <code>parser_options</code> element concerns the MDE parser:</p>
+<p>The last <code>parserOptions</code> element concerns the MDE parser:</p>
 <ul><li>
-<p>the <code>parser_options.interface</code> is the path to the PHP interface file from the
-current document;</p>
+<p>the <code>parserOptions.silent</code> is a flag to see errors or not;</p>
 </li><li>
-<p>the <code>parser_options.mde_options</code> entry is a table of options passed to the 
+<p>the <code>parserOptions.interface</code> is the path to the PHP interface file from the
+current document ; you can also use a "online" value to use the online webservice
+available at <a href="http://api.aboutmde.org/" title="See online http://api.aboutmde.org/">http://api.aboutmde.org/</a> (this can be useful for a package installed
+via <em>Bower</em> for instance, as the PHP dependencies may be not installed) ;</p>
+</li><li>
+<p>the <code>parserOptions.mdeOptions</code> entry is a table of options passed to the 
 <a href="https://github.com/piwi/markdown-extended#php-script-usage" title="See online https://github.com/piwi/markdown-extended#php-script-usage">PHP-MarkdownExtended</a> 
-parser to let you make custom parsings.</p>
+parser to let you make custom parsings ; please note that the elements of this
+entry must follow an <em>underscored</em> notation (no camel-case).</p>
 </li></ul><h2 id="license">License</h2>
 <p><strong>MDE-Editor</strong> is authored by Pierre Cassat and licensed under a MIT license.</p>
 
@@ -153,8 +158,9 @@ parser to let you make custom parsings.</p>
             maxHeight: false,
             scroll: true
         },
-        parser_options: {
-            mde_options: {
+        parserOptions: {
+//            interface: 'online', // use this to use the webservice at <http://api.aboutmde.org/> instead of local one
+            mdeOptions: {
 //                config_file: 'markdown_config.simple.ini'
             }
         }
@@ -162,7 +168,7 @@ parser to let you make custom parsings.</p>
 
     var editor = new MdeEpicEditor(opts);
 
-    editor.load(function () {
+    editor.load(function() {
         console.log("MDE-EpicEditor is loaded")
     });
 
