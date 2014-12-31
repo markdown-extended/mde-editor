@@ -3,3 +3,4 @@
 .git*   text export-ignore
 vendor/  export-ignore
 bower_components/    export-ignore
+build/  export-ignore
