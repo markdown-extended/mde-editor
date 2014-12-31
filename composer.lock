@@ -1,0 +1,145 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "18689138b540ab16e2abd320db9db4c0",
+    "packages": [
+        {
+            "name": "piwi/markdown-extended",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/piwi/markdown-extended.git",
+                "reference": "9a76856924da43867eb32d04f026728229102203"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/piwi/markdown-extended/zipball/9a76856924da43867eb32d04f026728229102203",
+                "reference": "9a76856924da43867eb32d04f026728229102203",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "replace": {
+                "atelierspierrot/extended-markdown": "dev-master",
+                "atelierspierrot/markdown-extended": "dev-master"
+            },
+            "require-dev": {
+                "phpmd/phpmd": "1.4.*",
+                "phpunit/phpunit": "3.7.*",
+                "sami/sami": "2.*"
+            },
+            "bin": [
+                "bin/markdown-extended",
+                "man/markdown-extended.man",
+                "man/markdown-extended-documentation.man"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.0.*-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "MarkdownExtended": "src",
+                    "markdown": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "John Gruber",
+                    "homepage": "http://daringfireball.net/"
+                },
+                {
+                    "name": "Fletcher T. Penney",
+                    "homepage": "http://fletcherpenney.net/"
+                },
+                {
+                    "name": "Michel Fortin",
+                    "homepage": "http://michelf.com/"
+                },
+                {
+                    "name": "Pierre Cassat",
+                    "homepage": "http://e-piwi.fr/"
+                }
+            ],
+            "description": "A PHP parser for the Markdown Extended syntax",
+            "homepage": "http://github.com/piwi/markdown-extended",
+            "keywords": [
+                "markdown",
+                "markdown extended",
+                "mde"
+            ],
+            "time": "2014-12-26 22:32:34"
+        },
+        {
+            "name": "piwi/mde-service",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/piwi/mde-service.git",
+                "reference": "bfa3c5b02bc26b25c1ad9a7880b5bb383afa4801"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/piwi/mde-service/zipball/bfa3c5b02bc26b25c1ad9a7880b5bb383afa4801",
+                "reference": "bfa3c5b02bc26b25c1ad9a7880b5bb383afa4801",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "piwi/markdown-extended": "dev-master"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.1.*-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "MdeService": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "piwi",
+                    "homepage": "http://e-piwi.fr/"
+                }
+            ],
+            "description": "A webservice tool to parse Markdown-Extended contents online",
+            "homepage": "http://api.aboutmde.org/",
+            "keywords": [
+                "markdown",
+                "markdown-extended",
+                "webservice"
+            ],
+            "time": "2014-12-31 11:46:10"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "piwi/markdown-extended": 20,
+        "piwi/mde-service": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=5.3.0"
+    },
+    "platform-dev": []
+}

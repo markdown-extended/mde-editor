@@ -1,0 +1,32 @@
+# the composer stuff
+composer.lock
+vendor/*
+*/vendor/*
+
+# any "tmp*" file or dir anywhere
+*tmp*
+
+# user defined files
+user/*
+*/user/*
+
+# the documentation, that is NOT under version-control by default
+# this may be commented on the "dev" branch
+phpdoc/*
+phpdoc-2/*
+
+# for development ...
+# this may be commented on the "wip" branch
+dev/*
+
+# specific MDE files
+bin/sami.php
+bin/phpunit
+bin/pdepend
+bin/phpmd
+
+# no phar
+markdown-extended.phar
+
+# hack to allow keeping an empty directory
+!.gitkeep
