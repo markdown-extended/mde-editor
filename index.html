@@ -1,67 +1,142 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-    <title>Demonstration of the MDE-EpicEditor</title>
-    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <title>MDE-Editor</title>
+    
 <style>
-#mde-editor-wrapper {
-    background-color: #fff;
-    border-color: #ddd;
-    border-radius: 4px 4px 0 0;
-    border-width: 1px;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05) inset;
-    margin-left: 0;
-    margin-right: 0;
-    border-style: solid;
-    padding: 0px;
+html {
     position: relative;
+    min-height: 100%;
+}
+body {
+    margin-bottom: 100px;
+}
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 80px;
+    background-color: #f5f5f5;
+    padding-top: 20px;
+}
+#mde-editor {
+    border: 1px solid #000;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.75);
+    height: 349px;
+    margin-top: 20px;
 }
 </style>
 </head>
 <body>
 
-<a href="https://github.com/piwi/mde-editor"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
-
 <div class="container">
 
     <div class="page-header">
-        <h1>MDE-EpicEditor <small><em>a markdown-extended web editor</em></small></h1>
+        <h1>MDE-Editor <small><em>a markdown-extended web editor</em></small></h1>
     </div>
 
-    <div>
-        <p>This is a demo of <a href="http://github.com/piwi/mde-editor">MDE editor</a>, built with the help of the following tools:
-            <a href="http://epiceditor.com/">EpicEditor</a> and
-            <a href="http://github.com/piwi/markdown-extended">PHP MarkdownExtended</a>.
-        </p>
-        <p>The demo is built with the help of <a href="http://getbootstrap.com">Bootstrap</a> (not required for the editor).</p>
-    </div>
+    <h2>An Embeddable JavaScript Markdown<em>Extended</em> Editor</h2>
+
+    <p>MDE-Editor is an embeddable JavaScript <a href="http://aboutmde.org/">Markdown Extended</a> editor based on <a href="http://epiceditor.com/">EpicEditor</a>.</p>
 
     <form name="mde_form" id="mde_form">
         <div class="form-group">
             <textarea class="form-control" rows="3" style="display:none;" name="mde-content" id="mde-content"></textarea>
-            <div id="mde-editor-wrapper">
-                <div id="mde-editor"></div>
-            </div>
+            <div id="mde-editor"></div>
         </div>
     </form>
 
-    <div class="well well-sm text-right text-muted small">
-        <p><strong>MDE-Editor</strong> is authored by <a href="http://github.com/piwi">@piwi</a> and licensed under the <a href="https://github.com/piwi/mde-editor/blob/master/LICENSE">MIT license</a>.</p>
-        <p>Original sources are available at <a href="http://github.com/piwi/mde-editor">github.com/piwi/mde-editor</a>.</p>
+    <hr>
+
+    <div class="content">
+        <h1 id="mdeeditor">MDE-Editor</h1>
+<p><strong>A web editor for the Markdown-Extended (<em>MDE</em>) syntax.</strong></p>
+
+<p>This editor is a custom version of the original <a href="http://epiceditor.com/" title="See online http://epiceditor.com/">EpicEditor</a>
+to use the <a href="http://github.com/piwi/markdown-extended" title="See online http://github.com/piwi/markdown-extended">PHP MarkdownExtended</a> parser.
+It uses the <a href="http://github.com/piwi/mde-service" title="See online http://github.com/piwi/mde-service">MDE-Service</a> PHP interface to post 
+the markdown content of the editor (via a <strong>synchronous</strong> XMLHttpRequest) at each run 
+(the original content is not parsed in JavaScript).</p>
+<h2 id="installation">Installation</h2>
+<p>To install and use it, you will need <a href="http://bower.io/" title="See online http://bower.io/">Bower</a> and <a href="http://getcomposer.org/" title="See online http://getcomposer.org/">Composer</a>:</p>
+<pre>wget --no-check-certificate https://github.com/piwi/mde-editor/archive/master.tar.gz
+tar -xvf master.tar.gz
+cd mde-editor-master
+bower install
+composer install</pre>
+<p>Then you can browse the demonstration page: <a href="http://your.localhost/path/to/mde-editor-master/" title="See online http://your.localhost/path/to/mde-editor-master/">http://your.localhost/path/to/mde-editor-master/</a>.</p>
+<h2 id="usage">Usage</h2>
+<p>Usage of the <strong>MDE-Editor</strong> is very similar to the one of <a href="http://epiceditor.com/#quick-start" title="See online http://epiceditor.com/#quick-start">EpicEditor</a>
+except that:</p>
+<ul><li>
+<p>you must include the <code>mde-editor.js</code> script AFTER the original <code>epiceditor(.min).js</code>:</p>
+<pre>&lt;script src="mde-editor/mde-editor.js"&gt;&lt;/script&gt;</pre></li><li>
+<p>you must create a <code>MdeEpicEditor</code> object instead of the original <code>EpicEditor</code>:</p>
+<pre>var editor = new MdeEpicEditor().load();</pre></li><li>
+<p>the default ID of the DOM block which will finally embed the editor is <code>mde-editor</code>:</p>
+<pre>&lt;div id="mde-editor"&gt;&lt;/div&gt;</pre></li></ul>
+<p>If you move the package files, you NEED to keep the <code>mde_editor_interface.php</code> PHP script
+in the same directory as the <code>mde-editor.js</code> (or override the <code>parser_options</code> settings - 
+see below) and redefine the <code>basePath</code> option to fit your environment. You also need to 
+redefine the <code>$autoloader</code> variable at the top of the <code>mde_editor_interface.php</code> script.</p>
+<h2 id="options">Options</h2>
+<p>The default options of the <strong>MDE-Editor</strong> are (they will be merged with the 
+<a href="http://epiceditor.com/#epiceditoroptions" title="See online http://epiceditor.com/#epiceditoroptions">default EpicEditor options</a> in final object):</p>
+<pre>    container:  'mde-editor',
+    basePath:   'bower_components/epiceditor/epiceditor/',
+    autogrow:   true,
+    file: {
+        name:           'mde-editor',
+        defaultContent: 'Type your *markdown*-**extended** content here ...',
+        autoSave:       5000
+    },
+    parser_options: {
+        silent:      false,
+        interface:   'mde-editor/mde_editor_interface.php',
+        mde_options: {}
+    }</pre>
+<p>The last <code>parser_options</code> element concerns the MDE parser:</p>
+<ul><li>
+<p>the <code>parser_options.interface</code> is the path to the PHP interface file from the
+current document;</p>
+</li><li>
+<p>the <code>parser_options.mde_options</code> entry is a table of options passed to the 
+<a href="https://github.com/piwi/markdown-extended#php-script-usage" title="See online https://github.com/piwi/markdown-extended#php-script-usage">PHP-MarkdownExtended</a> 
+parser to let you make custom parsings.</p>
+</li></ul><h2 id="license">License</h2>
+<p><strong>MDE-Editor</strong> is authored by Pierre Cassat and licensed under a MIT license.</p>
+
+<p>To transmit a bug or a feature request, see <a href="http://github.com/piwi/mde-editor/issues" title="See online http://github.com/piwi/mde-editor/issues">http://github.com/piwi/mde-editor/issues</a>.</p>
+
+
+        
     </div>
 
 </div>
 
-    <script src="bower_components/epiceditor/epiceditor/js/epiceditor.min.js"></script>
-    <script src="mde-editor/mde-editor.js"></script>
+<footer class="footer">
+    <div class="container">
+        <div class="pull-left text-left">
+            <p class="text-muted small">The demo is built with the help of <a href="http://getbootstrap.com">Bootstrap</a> (not required for the editor).</p>
+        </div>
+        <div class="pull-right text-right">
+            <p class="text-muted small">
+                <strong>MDE-Editor</strong> is authored by <a href="http://github.com/piwi">@piwi</a> and licensed under the <a href="https://github.com/piwi/mde-editor/blob/master/LICENSE">MIT license</a>.
+                <br class="hidden-xs hidden-sm">
+                Original sources are available at <a href="http://github.com/piwi/mde-editor">github.com/piwi/mde-editor</a>.
+            </p>
+        </div>
+    </div>
+</footer>
+
+<a href="https://github.com/piwi/mde-editor"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
+<script src="bower_components/epiceditor/epiceditor/js/epiceditor.min.js"></script>
+<script src="mde-editor/mde-editor.js"></script>
 <script>
 (function() {
 
@@ -74,12 +149,11 @@
             editor: 'themes/editor/epic-dark.css'
         },
         autogrow: {
-            minHeight: 200,
+            minHeight: 350,
             maxHeight: false,
             scroll: true
         },
         parser_options: {
-//            autoloader: 'not-exists',
             mde_options: {
 //                config_file: 'markdown_config.simple.ini'
             }
