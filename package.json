@@ -16,6 +16,7 @@
     "markdown-extended",
     "editor"
   ],
+  "main": "mde-editor/mde-editor.js",
   "dependencies": {
     "epiceditor": "~0.2.3"
   },

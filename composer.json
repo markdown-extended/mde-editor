@@ -22,5 +22,13 @@
         "branch-alias": {
             "dev-master": "0.0.*-dev"
         }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "bower install"
+        ],
+        "post-update-cmd": [
+            "bower install"
+        ]
     }
 }
