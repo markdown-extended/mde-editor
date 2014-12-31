@@ -31,6 +31,16 @@ function MdeEpicEditor(options) {
         opts = options || {},
         defaults = {
             parser:     mde_editor,
+/*
+            parser:     function(src) {
+                if (src!='TEST') {
+                    var args = arguments;
+                    setTimeout(function(){ return mde_editor.apply(window, args); }, 2000);
+                } else {
+                    return mde_editor.apply(window, arguments);
+                }
+            },
+*/
             container:  'mde-editor',
             basePath:   'bower_components/epiceditor/epiceditor/',
             autogrow:   true,
@@ -41,6 +51,7 @@ function MdeEpicEditor(options) {
             },
             parserOptions: {
                 silent:      false,
+                loader:      '<div id="epiceditor-previewer-loader"><img src="mde-editor/indicator.gif" alt="loading ..." style="vertical-align: middle;" /> parsing content ...</div>',
                 interface:   'mde-editor/mde_editor_interface.php',
                 mdeOptions: {}
             }
@@ -55,6 +66,19 @@ function MdeEpicEditor(options) {
     delete settings.parserOptions;
 //    console.debug('initializing MdeEpicEditor with options', settings);
     mde_editor_options.epic_editor = new EpicEditor(settings);
+
+    mde_editor_options.epic_editor.on('save', function(){
+        var _self = mde_editor_options.epic_editor;
+        _self.previewer.innerHTML = mde_editor_options.loader;
+        if (!_self.is('fullscreen')) {
+            _self.editorIframe.style.left = '-999999px';
+            _self.previewerIframe.style.left = '';
+            _self._eeState.preview = true;
+            _self._eeState.edit = false;
+            _self._focusExceptOnLoad();
+        }
+    });
+
     return mde_editor_options.epic_editor;
 }
 

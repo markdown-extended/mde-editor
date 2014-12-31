@@ -45,6 +45,8 @@ if (!empty($_POST)) { echo "# POST data:".PHP_EOL; var_dump($_POST); }
 if (!empty($_FILES)) { echo "# FILES data:".PHP_EOL; var_dump($_FILES); }
 //*/
 
+sleep(5);
+
 // distribute the request, parse received content and serve the JSON response
 \MdeService\Controller::create()
     ->distribute()
