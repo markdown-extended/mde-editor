@@ -11,6 +11,11 @@
 ;(function (window, undefined) {
 
 /**
+ * The default distant API URL
+ */
+var MDEServiceOnlineURL = 'http://api.aboutmde.org/mde-api.php';
+
+/**
  * Store the MDE parser options
  */
 var mde_editor_options;
@@ -22,8 +27,7 @@ var mde_editor_options;
  * @returns {object} EpicEditor will be returned
  */
 function MdeEpicEditor(options) {
-    var _this,
-        settings,
+    var settings,
         opts = options || {},
         defaults = {
             parser:     mde_editor,
@@ -35,20 +39,23 @@ function MdeEpicEditor(options) {
                 defaultContent: 'Type your *markdown*-__extended__ content here ...',
                 autoSave:       5000
             },
-            parser_options: {
+            parserOptions: {
                 silent:      false,
                 interface:   'mde-editor/mde_editor_interface.php',
-                mde_options: {}
+                mdeOptions: {}
             }
         };
 
     settings = merge({}, defaults, opts);
-    mde_editor_options = settings.parser_options;
+    mde_editor_options = settings.parserOptions;
+    if (mde_editor_options.interface == 'online') {
+        mde_editor_options.interface = MDEServiceOnlineURL;
+    }
 //    console.debug('mde_editor options:', mde_editor_options);
-    delete settings.parser_options;
+    delete settings.parserOptions;
 //    console.debug('initializing MdeEpicEditor with options', settings);
-    _this = new EpicEditor(settings);
-    return _this;
+    mde_editor_options.epic_editor = new EpicEditor(settings);
+    return mde_editor_options.epic_editor;
 }
 
 /**
@@ -108,18 +115,22 @@ function mde_editor (src) {
         data;
     try {
         xhr = createRequest();
-        xhr.onreadystatechange  = function() {
-            if (xhr.readyState  == 4) {
-                var response = JSON.parse(xhr.response);
-//                console.debug('receiving response from interface ', response);
-                if (xhr.status  == 200) {
-                    xhr_response = response.content;
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+                if (xhr.responseText !== undefined && xhr.responseText.length > 0) {
+                    var response = JSON.parse(xhr.responseText);
+//                    console.debug('receiving response from interface ', response);
+                    if (xhr.status  == 200) {
+                        xhr_response = response.content;
+                    } else {
+                        throw "Error on XHR response [status " + xhr.status + "]:\n" + response.errors.join('\n');
+                    }
                 } else {
-                    throw "Error on XHR response [status " + xhr.status + "]:\n" + response.errors.join('\n');
+                    throw "Empty XHR response, maybe a cross-domain issue?";
                 }
             }
         };
-        data = "options=" + encodeURIComponent(JSON.stringify(opts.mde_options)) + "&"
+        data = "options=" + encodeURIComponent(JSON.stringify(opts.mdeOptions)) + "&"
             + "source=" + encodeURIComponent(src);
 //            console.debug('sending data to interface '+opts.interface, data);
         xhr.open("POST", opts.interface,  false);

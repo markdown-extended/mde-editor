@@ -62,20 +62,25 @@ The default options of the **MDE-Editor** are (they will be merged with the
             defaultContent: 'Type your *markdown*-**extended** content here ...',
             autoSave:       5000
         },
-        parser_options: {
+        parserOptions: {
             silent:      false,
             interface:   'mde-editor/mde_editor_interface.php',
-            mde_options: {}
+            mdeOptions: {}
         }
 
-The last `parser_options` element concerns the MDE parser:
+The last `parserOptions` element concerns the MDE parser:
 
--   the `parser_options.interface` is the path to the PHP interface file from the
-    current document;
+-   the `parserOptions.silent` is a flag to see errors or not;
 
--   the `parser_options.mde_options` entry is a table of options passed to the 
+-   the `parserOptions.interface` is the path to the PHP interface file from the
+    current document ; you can also use a "online" value to use the online webservice
+    available at <http://api.aboutmde.org/> (this can be useful for a package installed
+    via *Bower* for instance, as the PHP dependencies may be not installed) ;
+
+-   the `parserOptions.mdeOptions` entry is a table of options passed to the 
     [PHP-MarkdownExtended](https://github.com/piwi/markdown-extended#php-script-usage) 
-    parser to let you make custom parsings.
+    parser to let you make custom parsings ; please note that the elements of this
+    entry must follow an *underscored* notation (no camel-case).
 
 
 License
