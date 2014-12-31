@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="{% CHARSET %}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <title>{% TITLE %}</title>
+    {% META %}
+<style>
+html {
+    position: relative;
+    min-height: 100%;
+}
+body {
+    margin-bottom: 100px;
+}
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 80px;
+    background-color: #f5f5f5;
+    padding-top: 20px;
+}
+#mde-editor {
+    border: 1px solid #000;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.75);
+    height: 349px;
+    margin-top: 20px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="page-header">
+        <h1>MDE-Editor <small><em>a markdown-extended web editor</em></small></h1>
+    </div>
+
+    <h2>An Embeddable JavaScript Markdown<em>Extended</em> Editor</h2>
+
+    <p>MDE-Editor is an embeddable JavaScript <a href="http://aboutmde.org/">Markdown Extended</a> editor based on <a href="http://epiceditor.com/">EpicEditor</a>.</p>
+
+    <form name="mde_form" id="mde_form">
+        <div class="form-group">
+            <textarea class="form-control" rows="3" style="display:none;" name="mde-content" id="mde-content"></textarea>
+            <div id="mde-editor"></div>
+        </div>
+    </form>
+
+    <hr>
+
+    <div class="content">
+        {% BODY %}
+        {% NOTES %}
+    </div>
+
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <div class="pull-left text-left">
+            <p class="text-muted small">The demo is built with the help of <a href="http://getbootstrap.com">Bootstrap</a> (not required for the editor).</p>
+        </div>
+        <div class="pull-right text-right">
+            <p class="text-muted small">
+                <strong>MDE-Editor</strong> is authored by <a href="http://github.com/piwi">@piwi</a> and licensed under the <a href="https://github.com/piwi/mde-editor/blob/master/LICENSE">MIT license</a>.
+                <br class="hidden-xs hidden-sm">
+                Original sources are available at <a href="http://github.com/piwi/mde-editor">github.com/piwi/mde-editor</a>.
+            </p>
+        </div>
+    </div>
+</footer>
+
+<a href="https://github.com/piwi/mde-editor"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
+<script src="bower_components/epiceditor/epiceditor/js/epiceditor.min.js"></script>
+<script src="mde-editor/mde-editor.js"></script>
+<script>
+(function() {
+
+    var opts = {
+        textarea: document.getElementById('mde-content'),
+        localStorageName: 'mde-editor',
+        theme: {
+            base: 'themes/base/epiceditor.css',
+            preview: 'themes/preview/github.css',
+            editor: 'themes/editor/epic-dark.css'
+        },
+        autogrow: {
+            minHeight: 350,
+            maxHeight: false,
+            scroll: true
+        },
+        parser_options: {
+            mde_options: {
+//                config_file: 'markdown_config.simple.ini'
+            }
+        }
+    };
+
+    var editor = new MdeEpicEditor(opts);
+
+    editor.load(function () {
+        console.log("MDE-EpicEditor is loaded")
+    });
+
+})();
+</script>
+
+</body>
+</html>
