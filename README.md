@@ -9,6 +9,8 @@ It uses the [MDE-Service](http://github.com/piwi/mde-service) PHP interface to p
 the markdown content of the editor (via a **synchronous** XMLHttpRequest) at each run 
 (the original content is not parsed in JavaScript).
 
+This editor is available online at <http://dingus.aboutmde.org/>.
+
 
 Installation
 ------------
