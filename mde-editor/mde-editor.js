@@ -23,7 +23,7 @@ var mde_editor_options;
  */
 function MdeEpicEditor(options) {
     var _this,
-        mde_options,
+        settings,
         opts = options || {},
         defaults = {
             parser:     mde_editor,
@@ -32,23 +32,22 @@ function MdeEpicEditor(options) {
             autogrow:   true,
             file: {
                 name:           'mde-editor',
-                defaultContent: 'Type your *markdown*-**extended** content here ...',
+                defaultContent: 'Type your *markdown*-__extended__ content here ...',
                 autoSave:       5000
             },
             parser_options: {
                 silent:      false,
                 interface:   'mde-editor/mde_editor_interface.php',
-                mde_options: {},
-                autoloader:  '../vendor/autoload.php'
+                mde_options: {}
             }
         };
 
-    mde_options = merge({}, defaults, opts);
-    mde_editor_options = mde_options.parser_options;
+    settings = merge({}, defaults, opts);
+    mde_editor_options = settings.parser_options;
 //    console.debug('mde_editor options:', mde_editor_options);
-    delete mde_options.parser_options;
-//    console.debug('initializing MdeEpicEditor with options', mde_options);
-    _this = new EpicEditor(mde_options);
+    delete settings.parser_options;
+//    console.debug('initializing MdeEpicEditor with options', settings);
+    _this = new EpicEditor(settings);
     return _this;
 }
 
@@ -82,13 +81,13 @@ function merge(obj) {
  */
 function createRequest() {
     try {
-        xhr = new ActiveXObject('Msxml2.XMLHTTP');
+        xhr = new XMLHttpRequest();
     } catch (err2) {
         try {
-            xhr = new ActiveXObject('Microsoft.XMLHTTP');
+            xhr = new ActiveXObject('Msxml2.XMLHTTP');
         } catch (err3) {
             try {
-                xhr = new XMLHttpRequest();
+                xhr = new ActiveXObject('Microsoft.XMLHTTP');
             } catch (err1) {
                 throw 'Can not initiate XHR request!';
             }
@@ -103,43 +102,36 @@ function createRequest() {
  * @returns {*}
  */
 function mde_editor (src) {
-    var ajax_response = src.replace(/(?:\r\n|\r|\n)/g, '<br />'),
+    var xhr_response = src.replace(/(?:\r\n|\r|\n)/g, '<br />'),
         opts = mde_editor_options,
         xhr,
         data;
     try {
         xhr = createRequest();
-        if (xhr) {
-            xhr.onreadystatechange  = function() {
-                if (xhr.readyState  == 4) {
-                    if (xhr.status  == 200) {
-                        var response = JSON.parse(xhr.response);
-//                        console.debug('receiving response from interface ', response);
-                        if (response.status === 0) {
-                            ajax_response = response.content;
-                        } else {
-                            console.error("Error on XHR response:\n" + response.error.join('\n'));
-                        }
-                    } else {
-                        throw "Error on XHR request [code " + xhr.status + "]";
-                    }
+        xhr.onreadystatechange  = function() {
+            if (xhr.readyState  == 4) {
+                var response = JSON.parse(xhr.response);
+//                console.debug('receiving response from interface ', response);
+                if (xhr.status  == 200) {
+                    xhr_response = response.content;
+                } else {
+                    throw "Error on XHR response [status " + xhr.status + "]:\n" + response.errors.join('\n');
                 }
-            };
-            data = "autoloader=" + encodeURIComponent(opts.autoloader) + "&"
-                + "options=" + encodeURIComponent(JSON.stringify(opts.mde_options)) + "&"
-                + "source=" + encodeURIComponent(src);
+            }
+        };
+        data = "options=" + encodeURIComponent(JSON.stringify(opts.mde_options)) + "&"
+            + "source=" + encodeURIComponent(src);
 //            console.debug('sending data to interface '+opts.interface, data);
-            xhr.open("POST", opts.interface,  false);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.send(data);
-        }
+        xhr.open("POST", opts.interface,  false);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.send(data);
     } catch (e) {
         if (opts.silent) {
             return "An error occured:\n" + e.message;
         }
         throw e;
     }
-    return ajax_response;
+    return xhr_response;
 }
 
 window.MdeEpicEditor = MdeEpicEditor;

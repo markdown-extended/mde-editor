@@ -1,0 +1,5 @@
+# default global character set
+AddDefaultCharset utf-8
+
+# disable server signature
+ServerSignature Off
