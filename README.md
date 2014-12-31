@@ -5,14 +5,15 @@ MDE-Editor
 
 This editor is a custom version of the original [EpicEditor](http://epiceditor.com/)
 to use the [PHP MarkdownExtended](http://github.com/piwi/markdown-extended) parser.
-It uses a PHP interface to post the markdown content of the editor (via a **synchronous**
-XMLHttpRequest) at each run (the original content is not parsed in JavaScript).
+It uses the [MDE-Service](http://github.com/piwi/mde-service) PHP interface to post 
+the markdown content of the editor (via a **synchronous** XMLHttpRequest) at each run 
+(the original content is not parsed in JavaScript).
 
 
 Installation
 ------------
 
-To install and use it, you will need [Bower](http://bower.io/) and [Composer](http://getcomposer.org):
+To install and use it, you will need [Bower](http://bower.io/) and [Composer](http://getcomposer.org/):
 
     wget --no-check-certificate https://github.com/piwi/mde-editor/archive/master.tar.gz
     tar -xvf master.tar.gz
@@ -43,7 +44,8 @@ except that:
 
 If you move the package files, you NEED to keep the `mde_editor_interface.php` PHP script
 in the same directory as the `mde-editor.js` (or override the `parser_options` settings - 
-see below) and redefine the `basePath` option to fit your environment.
+see below) and redefine the `basePath` option to fit your environment. You also need to 
+redefine the `$autoloader` variable at the top of the `mde_editor_interface.php` script.
 
 
 Options
@@ -63,14 +65,13 @@ The default options of the **MDE-Editor** are (they will be merged with the
         parser_options: {
             silent:      false,
             interface:   'mde-editor/mde_editor_interface.php',
-            mde_options: {},
-            autoloader:  '../vendor/autoload.php'
+            mde_options: {}
         }
 
 The last `parser_options` element concerns the MDE parser:
 
--   the `parser_options.autoloader` is the path to the PHP *autoloader* file,
-    **relative** to the source file `mde_editor_interface.php`;
+-   the `parser_options.interface` is the path to the PHP interface file from the
+    current document;
 
 -   the `parser_options.mde_options` entry is a table of options passed to the 
     [PHP-MarkdownExtended](https://github.com/piwi/markdown-extended#php-script-usage) 
