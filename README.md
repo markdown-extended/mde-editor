@@ -85,6 +85,22 @@ The last `parserOptions` element concerns the MDE parser:
     entry must follow an *underscored* notation (no camel-case).
 
 
+Usage as a *Bower* dependency
+-----------------------------
+
+The **MDE-Editor** is registered into [Bower](http://bower.io/search/?q=mde-editor). BUT, as
+it remains on a PHP application, to get a "ready-to-use" editor (installed with the required
+PHP scripts), you MUST use the `bower` branch of the package as follows:
+
+    bower install mde-editor#bower --save
+
+Or you may write in your `bower.json` configuration file:
+
+    "dependencies": {
+        "mde-editor": "bower"
+    }
+
+
 License
 -------
 
