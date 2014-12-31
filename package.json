@@ -1,13 +1,14 @@
 {
   "name": "mde-editor",
   "version": "0.0.0",
-  "authors": [
-    "piwi <http://e-piwi.fr/>"
-  ],
+  "author": "piwi <http://e-piwi.fr/>",
   "description": "MarkdownExtended web editor (based on EpicEditor)",
-  "license": "MIT",
-  "main": [
-    "./mde-editor/mde-editor.js"
+  "license": {
+    "type": "MIT",
+    "url": "https://raw.github.com/OscarGodson/EpicEditor/master/LICENSE"
+  },
+  "contributors": [
+    "piwi <http://e-piwi.fr/>"
   ],
   "keywords": [
     "embeddable",
@@ -15,14 +16,8 @@
     "markdown-extended",
     "editor"
   ],
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
-  ],
   "dependencies": {
     "epiceditor": "~0.2.3"
-  }
+  },
+  "repository": "git@github.com:piwi/mde-editor.git"
 }
