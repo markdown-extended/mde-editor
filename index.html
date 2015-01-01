@@ -62,7 +62,9 @@ to use the <a href="http://github.com/piwi/markdown-extended" title="See online 
 It uses the <a href="http://github.com/piwi/mde-service" title="See online http://github.com/piwi/mde-service">MDE-Service</a> PHP interface to post 
 the markdown content of the editor (via a <strong>synchronous</strong> XMLHttpRequest) at each run 
 (the original content is not parsed in JavaScript).</p>
-<h2 id="installation">Installation</h2>
+
+<p>This editor is available online at <a href="http://dingus.aboutmde.org/" title="See online http://dingus.aboutmde.org/">http://dingus.aboutmde.org/</a>.</p>
+<h2 id="installation">Installation</h2><h3 id="manual_installation">Manual installation</h3>
 <p>To install and use it, you will need <a href="http://bower.io/" title="See online http://bower.io/">Bower</a> and <a href="http://getcomposer.org/" title="See online http://getcomposer.org/">Composer</a>:</p>
 <pre>wget --no-check-certificate https://github.com/piwi/mde-editor/archive/master.tar.gz
 tar -xvf master.tar.gz
@@ -70,7 +72,15 @@ cd mde-editor-master
 bower install
 composer install</pre>
 <p>Then you can browse the demonstration page: <a href="http://your.localhost/path/to/mde-editor-master/" title="See online http://your.localhost/path/to/mde-editor-master/">http://your.localhost/path/to/mde-editor-master/</a>.</p>
-<h2 id="usage">Usage</h2>
+<h3 id="usage_as_a_bower_dependency">Usage as a <em>Bower</em> dependency</h3>
+<p>The <strong>MDE-Editor</strong> is registered into <a href="http://bower.io/search/?q=mde-editor" title="See online http://bower.io/search/?q=mde-editor">Bower</a>. BUT, as
+it remains on a PHP application, to get a "ready-to-use" editor (installed with the required
+PHP scripts), you MUST use the <code>bower</code> branch of the package as follows:</p>
+<pre>bower install mde-editor#bower --save</pre>
+<p>Or you may write in your <code>bower.json</code> configuration file:</p>
+<pre>"dependencies": {
+    "mde-editor": "bower"
+}</pre><h2 id="usage">Usage</h2>
 <p>Usage of the <strong>MDE-Editor</strong> is very similar to the one of <a href="http://epiceditor.com/#quick-start" title="See online http://epiceditor.com/#quick-start">EpicEditor</a>
 except that:</p>
 <ul><li>
