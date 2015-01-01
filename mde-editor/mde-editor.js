@@ -1,6 +1,6 @@
 /**
  * MDE-Editor (http://github.com/piwi/mde-editor)
- * Copyright (c) 2014 Pierre Cassat (MIT Licensed)
+ * Copyright (c) 2014-2015 Pierre Cassat (MIT Licensed)
  *
  * javascript based on:
  *
