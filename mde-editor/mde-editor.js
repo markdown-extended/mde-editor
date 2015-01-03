@@ -138,7 +138,7 @@ function mde_editor (src) {
         xhr.send(data);
     } catch (e) {
         if (opts.silent) {
-            return "An error occured:\n" + e.message;
+            return "An error occurred:\n" + e.message;
         }
         throw e;
     }
