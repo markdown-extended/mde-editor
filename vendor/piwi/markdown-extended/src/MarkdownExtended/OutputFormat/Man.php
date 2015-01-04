@@ -1,26 +1,17 @@
 <?php
-/**
- * PHP Markdown Extended - A PHP parser for the Markdown Extended syntax
- * Copyright (c) 2008-2014 Pierre Cassat
- * <http://github.com/piwi/markdown-extended>
+/*
+ * This file is part of the PHP-MarkdownExtended package.
  *
- * Based on MultiMarkdown
- * Copyright (c) 2005-2009 Fletcher T. Penney
- * <http://fletcherpenney.net/>
+ * (c) Pierre Cassat <me@e-piwi.fr> and contributors
  *
- * Based on PHP Markdown Lib
- * Copyright (c) 2004-2012 Michel Fortin
- * <http://michelf.com/projects/php-markdown/>
- *
- * Based on Markdown
- * Copyright (c) 2004-2006 John Gruber
- * <http://daringfireball.net/projects/markdown/>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
+
 namespace MarkdownExtended\OutputFormat;
 
 use \MarkdownExtended\MarkdownExtended;
-use \MarkdownExtended\API\OutputFormatInterface;
-use \MarkdownExtended\OutputFormat\AbstractOutputFormat;
+use \MarkdownExtended\API as MDE_API;
 use \MarkdownExtended\Helper as MDE_Helper;
 use \MarkdownExtended\Exception as MDE_Exception;
 
@@ -45,7 +36,7 @@ use \MarkdownExtended\Exception as MDE_Exception;
  */
 class Man
     extends AbstractOutputFormat
-    implements OutputFormatInterface
+    implements MDE_API\OutputFormatInterface
 {
 
     /**
@@ -82,7 +73,7 @@ class Man
             'tag'=>'\fI',
             'closable'=>true,
         ),
-        'preformated' => array(
+        'preformatted' => array(
             'tag'=>'.EX',
             'end_tag'=>'.EE',
             'indentable'=>true,
@@ -349,7 +340,7 @@ class Man
             . $this->ending_tag;
     }
 
-    public function buildPreformated($text = null, array $attributes = array())
+    public function buildPreformatted($text = null, array $attributes = array())
     {
         $lines = explode("\n", $text);
         $text = '';

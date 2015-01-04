@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/piwi/markdown-extended.git",
-                "reference": "9a76856924da43867eb32d04f026728229102203"
+                "reference": "d6be567e08fcaaae46613ce3a7f430ff1d6cba33"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/piwi/markdown-extended/zipball/9a76856924da43867eb32d04f026728229102203",
-                "reference": "9a76856924da43867eb32d04f026728229102203",
+                "url": "https://api.github.com/repos/piwi/markdown-extended/zipball/d6be567e08fcaaae46613ce3a7f430ff1d6cba33",
+                "reference": "d6be567e08fcaaae46613ce3a7f430ff1d6cba33",
                 "shasum": ""
             },
             "require": {
@@ -78,7 +78,7 @@
                 "markdown extended",
                 "mde"
             ],
-            "time": "2014-12-26 22:32:34"
+            "time": "2015-01-03 18:49:22"
         },
         {
             "name": "piwi/mde-service",
@@ -86,12 +86,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/piwi/mde-service.git",
-                "reference": "bfa3c5b02bc26b25c1ad9a7880b5bb383afa4801"
+                "reference": "209a2f3e77f34e273e9a7c60e65ed45009f195de"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/piwi/mde-service/zipball/bfa3c5b02bc26b25c1ad9a7880b5bb383afa4801",
-                "reference": "bfa3c5b02bc26b25c1ad9a7880b5bb383afa4801",
+                "url": "https://api.github.com/repos/piwi/mde-service/zipball/209a2f3e77f34e273e9a7c60e65ed45009f195de",
+                "reference": "209a2f3e77f34e273e9a7c60e65ed45009f195de",
                 "shasum": ""
             },
             "require": {
@@ -126,7 +126,7 @@
                 "markdown-extended",
                 "webservice"
             ],
-            "time": "2014-12-31 11:46:10"
+            "time": "2015-01-01 23:00:35"
         }
     ],
     "packages-dev": [],

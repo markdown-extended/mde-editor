@@ -1,21 +1,13 @@
 <?php
-/**
- * PHP Markdown Extended - A PHP parser for the Markdown Extended syntax
- * Copyright (c) 2008-2014 Pierre Cassat
- * <http://github.com/piwi/markdown-extended>
+/*
+ * This file is part of the PHP-MarkdownExtended package.
  *
- * Based on MultiMarkdown
- * Copyright (c) 2005-2009 Fletcher T. Penney
- * <http://fletcherpenney.net/>
+ * (c) Pierre Cassat <me@e-piwi.fr> and contributors
  *
- * Based on PHP Markdown Lib
- * Copyright (c) 2004-2012 Michel Fortin
- * <http://michelf.com/projects/php-markdown/>
- *
- * Based on Markdown
- * Copyright (c) 2004-2006 John Gruber
- * <http://daringfireball.net/projects/markdown/>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
+
 namespace MarkdownExtended\Grammar\Filter;
 
 use MarkdownExtended\MarkdownExtended;
@@ -38,11 +30,8 @@ class AutoLink
      */
     public function transform($text)
     {
-        $text = preg_replace_callback('{<([^\'">\s]+)>}i',
-            array($this, '_url_callback'), $text);
-
         // Email addresses: <address@domain.foo>
-        return preg_replace_callback('{
+        $text = preg_replace_callback('{
             <
             (?:mailto:)?
             (
@@ -61,6 +50,11 @@ class AutoLink
             >
             }xi',
             array($this, '_email_callback'), $text);
+
+        $text = preg_replace_callback('{<([^\'">\s]+)>}i',
+            array($this, '_url_callback'), $text);
+
+        return $text;
     }
 
     /**

@@ -1,21 +1,13 @@
 <?php
-/**
- * PHP Markdown Extended - A PHP parser for the Markdown Extended syntax
- * Copyright (c) 2008-2014 Pierre Cassat
- * <http://github.com/piwi/markdown-extended>
+/*
+ * This file is part of the PHP-MarkdownExtended package.
  *
- * Based on MultiMarkdown
- * Copyright (c) 2005-2009 Fletcher T. Penney
- * <http://fletcherpenney.net/>
+ * (c) Pierre Cassat <me@e-piwi.fr> and contributors
  *
- * Based on PHP Markdown Lib
- * Copyright (c) 2004-2012 Michel Fortin
- * <http://michelf.com/projects/php-markdown/>
- *
- * Based on Markdown
- * Copyright (c) 2004-2006 John Gruber
- * <http://daringfireball.net/projects/markdown/>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
+
 namespace MarkdownExtended\CommandLine;
 
 use \MarkdownExtended\MarkdownExtended;
@@ -67,6 +59,11 @@ abstract class AbstractConsole
     public $stderr;
 
     /**
+     * @var     int Initial error reporting for restoration
+     */
+    public $error_reporting;
+
+    /**
      * @var     \MarkdownExtended\MarkdownExtended
      */
     protected static $mde_instance;
@@ -98,6 +95,7 @@ abstract class AbstractConsole
      */
     public function __construct()
     {
+        $this->error_reporting = error_reporting();
         $this->stdout   = defined('STDOUT') ? STDOUT : fopen('php://stdout', 'c+');
         $this->stdin    = defined('STDIN')  ? STDIN  : fopen('php://stdin', 'c+');
         $this->stderr   = defined('STDERR') ? STDERR : fopen('php://stderr', 'c+');
@@ -309,7 +307,7 @@ abstract class AbstractConsole
     protected function runOptions()
     {
         foreach ($this->options as $_opt_n=>$_opt_v) {
-            $opt_torun=false;
+            $opt_torun = false;
             foreach (array($_opt_n, $_opt_n.':', $_opt_n.'::') as $_opt_item) {
                 if (array_key_exists($_opt_item, $this::$cli_options)) {
                     $opt_torun = $this::$cli_options[$_opt_item];
@@ -341,7 +339,8 @@ abstract class AbstractConsole
     public function runOption_verbose()
     {
         $this->verbose = true;
-        $this->info("Enabling 'verbose' mode");
+        $this->quiet = false;
+        error_reporting($this->error_reporting);
     }
 
     /**
@@ -351,9 +350,9 @@ abstract class AbstractConsole
      */
     public function runOption_quiet()
     {
+        $this->verbose = false;
         $this->quiet = true;
         error_reporting(0); 
-        $this->info("Enabling 'quiet' mode");
     }
 
     /**
@@ -365,19 +364,19 @@ abstract class AbstractConsole
     {
         $this->debug = true;
         error_reporting(E_ALL); 
-        $this->info("Enabling 'debug' mode");
     }
 
     /**
      * Run the usage option
      *
+     * @param   int     $exit_status
      * @return  void
      */
-    public function runOption_usage($code = 0)
+    public function runOption_usage($exit_status = 0)
     {
         $this->write("Use option '--help' to get information.");
         $this->endRun();
-        exit($code);
+        exit($exit_status);
     }
 
 // -------------------
@@ -490,7 +489,7 @@ abstract class AbstractConsole
      */
     public function writeOutput($output)
     {
-        $clength=null;
+        $clength = null;
         if (!empty($output)) {
             $clength = strlen($output);
             $this->info("Rendering parsed content [strlen: $clength]");

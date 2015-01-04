@@ -1,24 +1,16 @@
 <?php
-/**
- * PHP Markdown Extended - A PHP parser for the Markdown Extended syntax
- * Copyright (c) 2008-2014 Pierre Cassat
- * <http://github.com/piwi/markdown-extended>
+/*
+ * This file is part of the PHP-MarkdownExtended package.
  *
- * Based on MultiMarkdown
- * Copyright (c) 2005-2009 Fletcher T. Penney
- * <http://fletcherpenney.net/>
+ * (c) Pierre Cassat <me@e-piwi.fr> and contributors
  *
- * Based on PHP Markdown Lib
- * Copyright (c) 2004-2012 Michel Fortin
- * <http://michelf.com/projects/php-markdown/>
- *
- * Based on Markdown
- * Copyright (c) 2004-2006 John Gruber
- * <http://daringfireball.net/projects/markdown/>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
+
 namespace MarkdownExtended;
 
-use \MarkdownExtended\API\ContentInterface;
+use \MarkdownExtended\API as MDE_API;
 use \MarkdownExtended\Helper as MDE_Helper;
 use \MarkdownExtended\Exception as MDE_Exception;
 
@@ -27,7 +19,7 @@ use \MarkdownExtended\Exception as MDE_Exception;
  * @package MarkdownExtended
  */
 class Content
-    implements ContentInterface
+    implements MDE_API\ContentInterface
 {
     /**
      * @var     mixed
@@ -128,11 +120,11 @@ class Content
      * @var  array
      */
     protected static $name_mapping = array(
-        'note'=>'notes',
-        'footnote'=>'footnotes',
-        'glossary'=>'glossaries',
-        'citation'=>'citations',
-        'url'=>'urls'
+        'note'      =>'notes',
+        'footnote'  =>'footnotes',
+        'glossary'  =>'glossaries',
+        'citation'  =>'citations',
+        'url'       =>'urls'
     );
 
 // -------------------------
@@ -166,8 +158,8 @@ class Content
      */
     public function __call($name, array $arguments = null)
     {
-        $method = substr($name, 0, 3) . 'Variable';
-        $variable = MDE_Helper::fromCamelCase(substr($name, 3));
+        $method     = substr($name, 0, 3) . 'Variable';
+        $variable   = MDE_Helper::fromCamelCase(substr($name, 3));
         array_unshift($arguments, $variable);
         if (method_exists($this, $method)) {
             return call_user_func_array(array($this, $method), $arguments);
@@ -181,7 +173,7 @@ class Content
     /**
      * Get an object property value
      *
-     * This will return `null` if the variable doesn't exist, and `false` if it is empty.
+     * This will return `null` if the variable does not exist, and `false` if it is empty.
      *
      * @param   string  $name
      * @return  mixed/null/false

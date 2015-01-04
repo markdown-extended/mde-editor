@@ -1,21 +1,13 @@
 <?php
-/**
- * PHP Markdown Extended - A PHP parser for the Markdown Extended syntax
- * Copyright (c) 2008-2014 Pierre Cassat
- * <http://github.com/piwi/markdown-extended>
+/*
+ * This file is part of the PHP-MarkdownExtended package.
  *
- * Based on MultiMarkdown
- * Copyright (c) 2005-2009 Fletcher T. Penney
- * <http://fletcherpenney.net/>
+ * (c) Pierre Cassat <me@e-piwi.fr> and contributors
  *
- * Based on PHP Markdown Lib
- * Copyright (c) 2004-2012 Michel Fortin
- * <http://michelf.com/projects/php-markdown/>
- *
- * Based on Markdown
- * Copyright (c) 2004-2006 John Gruber
- * <http://daringfireball.net/projects/markdown/>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
+
 namespace MarkdownExtended;
 
 use \MarkdownExtended\Exception as MDE_Exception;
@@ -152,7 +144,7 @@ class Helper
      *        &#101;&#46;&#x63;&#111;&#x6d;</a></p>
      *
      *  Based by a filter by Matthew Wickline, posted to BBEdit-Talk.
-     *   With some optimizations by Milian Wolff.
+     *  With some optimizations by Milian Wolff.
      *
      * @param   string  $addr   The email address to encode
      * @return  string  The encoded address

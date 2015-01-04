@@ -1,8 +1,8 @@
 Man:        PHP-Markdown-Extended Manual
 Man-name:   markdown-extended
 Author:     Pierre Cassat
-Date:       27-12-2014
-Version:    0.1-gamma4
+Date: 2015-01-03
+Version: 0.1.0-gamma.5
 
 
 ## NAME
@@ -108,7 +108,7 @@ disables the **quiet** one.
 :   Extract the *body* part from content(s) ; alias of option **--extract=body**.
 
 **-s** , **--simple**
-:   Use the simple default configuration file defined by the `\MarkdownExtended\MarkdownExtended::SIMPLE_CONFIGFILE`
+:   Use the simple default configuration file defined by the `\MarkdownExtended\Config::SIMPLE_CONFIGFILE`
     constant ; this is a preset to treat contents coming from input fields.
 
 ### Special options
@@ -183,7 +183,7 @@ read the LICENSE file for more information, or see
 <http://opensource.org/licenses/BSD-3-Clause>. 
 
 PHP Markdown Extended - 
-Copyright (c) 2008-2014 Pierre Cassat - 
+Copyright (c) 2008-2015 Pierre Cassat - 
 <http://e-piwi.fr/>
 
 Based on MultiMarkdown - 

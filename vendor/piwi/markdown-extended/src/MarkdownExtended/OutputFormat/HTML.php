@@ -1,26 +1,17 @@
 <?php
-/**
- * PHP Markdown Extended - A PHP parser for the Markdown Extended syntax
- * Copyright (c) 2008-2014 Pierre Cassat
- * <http://github.com/piwi/markdown-extended>
+/*
+ * This file is part of the PHP-MarkdownExtended package.
  *
- * Based on MultiMarkdown
- * Copyright (c) 2005-2009 Fletcher T. Penney
- * <http://fletcherpenney.net/>
+ * (c) Pierre Cassat <me@e-piwi.fr> and contributors
  *
- * Based on PHP Markdown Lib
- * Copyright (c) 2004-2012 Michel Fortin
- * <http://michelf.com/projects/php-markdown/>
- *
- * Based on Markdown
- * Copyright (c) 2004-2006 John Gruber
- * <http://daringfireball.net/projects/markdown/>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
+
 namespace MarkdownExtended\OutputFormat;
 
 use \MarkdownExtended\MarkdownExtended;
-use \MarkdownExtended\API\OutputFormatInterface;
-use \MarkdownExtended\OutputFormat\AbstractOutputFormat;
+use \MarkdownExtended\API as MDE_API;
 use \MarkdownExtended\Helper as MDE_Helper;
 use \MarkdownExtended\Exception as MDE_Exception;
 
@@ -30,7 +21,7 @@ use \MarkdownExtended\Exception as MDE_Exception;
  */
 class HTML
     extends AbstractOutputFormat
-    implements OutputFormatInterface
+    implements MDE_API\OutputFormatInterface
 {
 
     /**
@@ -49,7 +40,7 @@ class HTML
         'italic' => array(
             'tag'=>'em',
         ),
-        'preformated' => array(
+        'preformatted' => array(
             'tag'=>'pre',
         ),
         'link' => array(
@@ -216,6 +207,34 @@ class HTML
             unset($attributes['email']);
         }
         return $this->getTagString($text, 'a', $attributes);
+    }
+
+    public function buildMaths($text = null, array $attributes = array(), $type = 'block')
+    {
+        $math_type  = MarkdownExtended::getConfig('math_type');
+        if ($math_type == "mathjax") {
+            $text = $this->getTagString('['.$text.']', 'span', array(
+                    'class'=>"MathJax_Preview",
+                ))
+                .$this->getTagString($text, 'script', array(
+                    'type'=>"math/tex; mode=display",
+                ));
+        } else {
+            $text = $this->getTagString($text, $type, array(
+                    'class'=>"math",
+                ));
+        }
+        return $text;
+    }
+
+    public function buildMathsBlock($text = null, array $attributes = array())
+    {
+        return $this->buildMaths($text, $attributes, 'block');
+    }
+
+    public function buildMathsSpan($text = null, array $attributes = array())
+    {
+        return $this->buildMaths($text, $attributes, 'span');
     }
 
 }

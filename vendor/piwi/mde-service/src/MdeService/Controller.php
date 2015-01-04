@@ -3,7 +3,7 @@
  * This file is part of MDE-Service
  * <http://github.com/piwi/mde-service>
  *
- * Copyright 2014 Pierre Cassat
+ * Copyright 2014-2015 Pierre Cassat <me@e-piwi.fr>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,7 +82,7 @@ class Controller
         Container::set('response', new Response());
         Container::get('response')
             ->setHeader('Access-Control-Allow-Origin', '*')
-            ->setHeader('X-API-Version', self::API_VERSION)
+            ->setHeader('API-Version', self::API_VERSION)
         ;
     }
 
@@ -209,7 +209,7 @@ class Controller
         $gmdate = gmdate('D, d M Y H:i:s', $time);
 
         Container::get('response')
-            ->setHeader('X-MDE-Version', \MarkdownExtended\MarkdownExtended::MDE_VERSION)
+            ->setHeader('MDE-Version', \MarkdownExtended\MarkdownExtended::MDE_VERSION)
             ->setHeader('Last-Modified', $gmdate.' GMT')
         ;
 
@@ -272,15 +272,17 @@ class Controller
         }
 
         // if not modified, fetch headers and exit
+        $if_modified_since  = Container::get('request')->getHeader('If-Modified-Since');
+        $if_none_match      = Container::get('request')->getHeader('If-None-Match');
         if (
-            @strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) >= $time ||
-            (!empty($etag) && trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag)
+            (!empty($if_modified_since) && @strtotime($if_modified_since) >= $time) ||
+            (!empty($if_none_match) && !empty($etag) && trim($if_none_match) == $etag)
         ) {
             Container::get('response')
                 ->setStatus(Response::STATUS_NOT_MODIFIED)
                 ->fetchHeaders()
             ;
-            exit(0);
+            exit(PHP_EOL);
         }
 
         return $this;
@@ -321,7 +323,7 @@ class Controller
 
         if (Container::get('request')->isMethod('head')) {
             Container::get('response')->fetchHeaders();
-            exit(0);
+            exit(PHP_EOL);
         } else {
             try {
                 Container::get('response')->send($response_data);

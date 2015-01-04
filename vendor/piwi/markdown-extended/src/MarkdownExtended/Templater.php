@@ -1,26 +1,16 @@
 <?php
-/**
- * PHP Markdown Extended - A PHP parser for the Markdown Extended syntax
- * Copyright (c) 2008-2014 Pierre Cassat
- * <http://github.com/piwi/markdown-extended>
+/*
+ * This file is part of the PHP-MarkdownExtended package.
  *
- * Based on MultiMarkdown
- * Copyright (c) 2005-2009 Fletcher T. Penney
- * <http://fletcherpenney.net/>
+ * (c) Pierre Cassat <me@e-piwi.fr> and contributors
  *
- * Based on PHP Markdown Lib
- * Copyright (c) 2004-2012 Michel Fortin
- * <http://michelf.com/projects/php-markdown/>
- *
- * Based on Markdown
- * Copyright (c) 2004-2006 John Gruber
- * <http://daringfireball.net/projects/markdown/>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
+
 namespace MarkdownExtended;
 
-use \MarkdownExtended\API\TemplaterInterface;
-use \MarkdownExtended\API\ContentInterface;
-use \MarkdownExtended\API\CollectionInterface;
+use \MarkdownExtended\API as MDE_API;
 use \MarkdownExtended\Helper as MDE_Helper;
 use \MarkdownExtended\Exception as MDE_Exception;
 
@@ -29,7 +19,7 @@ use \MarkdownExtended\Exception as MDE_Exception;
  * @package MarkdownExtended
  */
 class Templater
-    implements TemplaterInterface
+    implements MDE_API\TemplaterInterface
 {
 
     /**
@@ -96,7 +86,7 @@ class Templater
      * @param   \MarkdownExtended\API\ContentInterface
      * @return  self
      */
-    public function load(ContentInterface $mde_content)
+    public function load(MDE_API\ContentInterface $mde_content)
     {
         $this->mde_content = $mde_content;
         return $this;
@@ -108,7 +98,7 @@ class Templater
      * @param   \MarkdownExtended\API\CollectionInterface
      * @return  self
      */
-    public function loadCollection(CollectionInterface $mde_content_collection)
+    public function loadCollection(MDE_API\CollectionInterface $mde_content_collection)
     {
         $this->mde_content_collection = $mde_content_collection;
         return $this;
@@ -355,7 +345,6 @@ class Templater
                 throw new MDE_Exception\Exception(
                     sprintf('Template file "%s" not found!', $tpl_filename)
                 );
-                return null;
             }
             return $tpl_filename;
         }

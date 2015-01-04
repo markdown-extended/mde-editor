@@ -1,26 +1,18 @@
 <?php
-/**
- * PHP Markdown Extended - A PHP parser for the Markdown Extended syntax
- * Copyright (c) 2008-2014 Pierre Cassat
- * <http://github.com/piwi/markdown-extended>
+/*
+ * This file is part of the PHP-MarkdownExtended package.
  *
- * Based on MultiMarkdown
- * Copyright (c) 2005-2009 Fletcher T. Penney
- * <http://fletcherpenney.net/>
+ * (c) Pierre Cassat <me@e-piwi.fr> and contributors
  *
- * Based on PHP Markdown Lib
- * Copyright (c) 2004-2012 Michel Fortin
- * <http://michelf.com/projects/php-markdown/>
- *
- * Based on Markdown
- * Copyright (c) 2004-2006 John Gruber
- * <http://daringfireball.net/projects/markdown/>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
+
 namespace MarkdownExtended\CommandLine;
 
 use \MarkdownExtended\MarkdownExtended;
+use \MarkdownExtended\Config;
 use \MarkdownExtended\API as MDE_API;
-use \MarkdownExtended\CommandLine\AbstractConsole;
 use \MarkdownExtended\Helper as MDE_Helper;
 use \MarkdownExtended\Exception as MDE_Exception;
 
@@ -80,7 +72,7 @@ class Reminders
         }
         $this->runOption_docsdir(__DIR__.'/../Resources/doc');
         $this->runOption_output(__DIR__.'/../../../markdown_reminders.html');
-        $this->runOption_config(MarkdownExtended::FULL_CONFIGFILE);
+        $this->runOption_config(Config::FULL_CONFIGFILE);
         $this->runOptions();
     }
 
@@ -196,15 +188,15 @@ EOT;
                     $md_output = $parser
                         ->parse($md_content)
                         ->getContent();
-                } catch (\MarkdownExtended\Exception\DomainException $e) {
+                } catch (MDE_Exception\DomainException $e) {
                     $this->caught($e);
-                } catch (\MarkdownExtended\Exception\RuntimeException $e) {
+                } catch (MDE_Exception\RuntimeException $e) {
                     $this->caught($e);
-                } catch (\MarkdownExtended\Exception\UnexpectedValueException $e) {
+                } catch (MDE_Exception\UnexpectedValueException $e) {
                     $this->caught($e);
-                } catch (\MarkdownExtended\Exception\InvalidArgumentException $e) {
+                } catch (MDE_Exception\InvalidArgumentException $e) {
                     $this->caught($e);
-                } catch (\MarkdownExtended\Exception\Exception $e) {
+                } catch (MDE_Exception\Exception $e) {
                     $this->caught($e);
                 } catch (\Exception $e) {
                     $this->caught($e);
@@ -219,9 +211,9 @@ EOT;
                 'span_contents' => $this->md_contents->getArrayFilter(array($this, 'filterSpan')),
                 'block_contents' => $this->md_contents->getArrayFilter(array($this, 'filterBlock')),
                 'misc_contents' => $this->md_contents->getArrayFilter(array($this, 'filterMisc')),
-                'mde_home' => \MarkdownExtended\MarkdownExtended::MDE_SOURCES,
-                'mde_name' => \MarkdownExtended\MarkdownExtended::MDE_NAME,
-                'mde_version' => \MarkdownExtended\MarkdownExtended::MDE_VERSION,
+                'mde_home' => MarkdownExtended::MDE_SOURCES,
+                'mde_name' => MarkdownExtended::MDE_NAME,
+                'mde_version' => MarkdownExtended::MDE_VERSION,
             ))
             ->getContent();
         if ($this->writeOutputFile($reminders, $this->output)) {

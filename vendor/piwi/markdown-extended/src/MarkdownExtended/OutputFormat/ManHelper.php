@@ -1,27 +1,17 @@
 <?php
-/**
- * PHP Markdown Extended - A PHP parser for the Markdown Extended syntax
- * Copyright (c) 2008-2014 Pierre Cassat
- * <http://github.com/piwi/markdown-extended>
+/*
+ * This file is part of the PHP-MarkdownExtended package.
  *
- * Based on MultiMarkdown
- * Copyright (c) 2005-2009 Fletcher T. Penney
- * <http://fletcherpenney.net/>
+ * (c) Pierre Cassat <me@e-piwi.fr> and contributors
  *
- * Based on PHP Markdown Lib
- * Copyright (c) 2004-2012 Michel Fortin
- * <http://michelf.com/projects/php-markdown/>
- *
- * Based on Markdown
- * Copyright (c) 2004-2006 John Gruber
- * <http://daringfireball.net/projects/markdown/>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
+
 namespace MarkdownExtended\OutputFormat;
 
 use \MarkdownExtended\MarkdownExtended;
-use \MarkdownExtended\API\ContentInterface;
-use \MarkdownExtended\API\OutputFormatInterface;
-use \MarkdownExtended\API\OutputFormatHelperInterface;
+use \MarkdownExtended\API as MDE_API;
 use \MarkdownExtended\OutputFormat\DefaultHelper;
 use \MarkdownExtended\Helper as MDE_Helper;
 use \MarkdownExtended\Exception as MDE_Exception;
@@ -32,17 +22,17 @@ use \MarkdownExtended\Exception as MDE_Exception;
  */
 class ManHelper
     extends DefaultHelper
-    implements OutputFormatHelperInterface
+    implements MDE_API\OutputFormatHelperInterface
 {
 
     /**
      * Get a complete version of parsed content, including metadata, body and notes
      *
      * @param   \MarkdownExtended\API\ContentInterface          $md_content
-     * @param   \MarkdownExtended\API\OutputFormatInterface     $formater
+     * @param   \MarkdownExtended\API\OutputFormatInterface     $formatter
      * @return  string
      */
-    public function getFullContent(ContentInterface $md_content, OutputFormatInterface $formater)
+    public function getFullContent(MDE_API\ContentInterface $md_content, MDE_API\OutputFormatInterface $formatter)
     {
         $content = '';
         $headers_infos = array();
@@ -54,10 +44,10 @@ class ManHelper
                 if (!in_array($meta_name, $special_metadata)) {
                     if ($meta_name=='title') {
                         $headers_infos['name'] = $meta_content;
-                    } elseif (in_array($meta_name, $formater::$headers_meta_data)) {
+                    } elseif (in_array($meta_name, $formatter::$headers_meta_data)) {
                         $headers_infos[$meta_name] = $meta_content;
                     } else {
-                        $content .= $formater->buildTag('meta_data', $meta_content, array('name'=>$meta_name));
+                        $content .= $formatter->buildTag('meta_data', $meta_content, array('name'=>$meta_name));
                     }
                 }
             }
@@ -68,12 +58,12 @@ class ManHelper
             if (empty($headers_infos['name']) && $md_content->getTitle()) {
                 $headers_infos['name'] = $md_content->getTitle();
             }
-            $content .= $formater->buildTag('meta_title', null, $headers_infos);
+            $content .= $formatter->buildTag('meta_title', null, $headers_infos);
         }
 
         // toc
         if ($md_content->getMenu()) {
-            $content .= $this->getToc($md_content, $formater);
+            $content .= $this->getToc($md_content, $formatter);
         }
 
         // body
@@ -85,9 +75,9 @@ class ManHelper
         if ($md_content->getNotes()) {
             $notes_content = '';
             foreach ($md_content->getNotes() as $id=>$note_content) {
-                $notes_content .= $formater->buildTag('ordered_list_item', $note_content['text'], $note_content);
+                $notes_content .= $formatter->buildTag('ordered_list_item', $note_content['text'], $note_content);
             }
-            $content .= $formater->buildTag('ordered_list', $notes_content, array('type'=>'footnotes'));
+            $content .= $formatter->buildTag('ordered_list', $notes_content, array('type'=>'footnotes'));
         }
 
         return $content;
@@ -97,10 +87,10 @@ class ManHelper
      * Build a hierarchical menu
      *
      * @param   \MarkdownExtended\API\ContentInterface          $md_content
-     * @param   \MarkdownExtended\API\OutputFormatInterface     $formater
+     * @param   \MarkdownExtended\API\OutputFormatInterface     $formatter
      * @return  string
      */
-    public function getToc(ContentInterface $md_content, OutputFormatInterface $formater)
+    public function getToc(MDE_API\ContentInterface $md_content, MDE_API\OutputFormatInterface $formatter)
     {
         return '';
     }

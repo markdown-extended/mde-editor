@@ -1,34 +1,25 @@
 <?php
-/**
- * PHP Markdown Extended - A PHP parser for the Markdown Extended syntax
- * Copyright (c) 2008-2014 Pierre Cassat
- * <http://github.com/piwi/markdown-extended>
+/*
+ * This file is part of the PHP-MarkdownExtended package.
  *
- * Based on MultiMarkdown
- * Copyright (c) 2005-2009 Fletcher T. Penney
- * <http://fletcherpenney.net/>
+ * (c) Pierre Cassat <me@e-piwi.fr> and contributors
  *
- * Based on PHP Markdown Lib
- * Copyright (c) 2004-2012 Michel Fortin
- * <http://michelf.com/projects/php-markdown/>
- *
- * Based on Markdown
- * Copyright (c) 2004-2006 John Gruber
- * <http://daringfireball.net/projects/markdown/>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
+
 namespace MarkdownExtended;
 
 use \MarkdownExtended\Helper as MDE_Helper;
 use \MarkdownExtended\Exception as MDE_Exception;
-use \MarkdownExtended\API\ParserInterface;
-use \MarkdownExtended\API\ContentInterface;
+use \MarkdownExtended\API as MDE_API;
 
 /**
  * PHP Markdown Extended Parser Class
  * @package MarkdownExtended
  */
 class Parser
-    implements ParserInterface
+    implements MDE_API\ParserInterface
 {
 
     /**
@@ -102,7 +93,7 @@ class Parser
 // ----------------------------------
     
     /**
-     * Main function. Performs some preprocessing on the input text
+     * Main function. Performs some pre-processing on the input text
      * and pass it through the document gamut.
      *
      * @param   \MarkdownExtended\API\ContentInterface   $content
@@ -112,7 +103,7 @@ class Parser
      * @see     self::_setup()
      * @see     self::_teardown()
      */
-    public function parse(ContentInterface $content, $secondary = false)
+    public function parse(MDE_API\ContentInterface $content, $secondary = false)
     {
         MarkdownExtended::addProcessedContent($content, $secondary);
         $this->_setup();
