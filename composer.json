@@ -1,7 +1,7 @@
 {
-    "name": "piwi/mde-editor",
+    "name": "markdown-extended/mde-editor",
     "description": "MarkdownExtended web editor (based on EpicEditor)",
-    "homepage": "http://github.com/piwi/mde-editor",
+    "homepage": "http://github.com/markdown-extended/mde-editor",
     "license": "MIT",
     "keywords": [
         "embeddable",
@@ -16,7 +16,10 @@
     "require": {
         "php": ">=5.3.0",
         "piwi/markdown-extended": "dev-master",
-        "piwi/mde-service": "dev-master"
+        "markdown-extended/mde-service": "dev-master"
+    },
+    "replace": {
+        "piwi/mde-editor": "*"
     },
     "extra": {
         "branch-alias": {

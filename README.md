@@ -5,7 +5,7 @@ MDE-Editor
 
 This editor is a custom version of the original [EpicEditor](http://epiceditor.com/)
 to use the [PHP MarkdownExtended](http://github.com/piwi/markdown-extended) parser.
-It uses the [MDE-Service](http://github.com/piwi/mde-service) PHP interface to post 
+It uses the [MDE-Service](http://github.com/markdown-extended/mde-service) PHP interface to post 
 the markdown content of the editor (via a **synchronous** XMLHttpRequest) at each run 
 (the original content is not parsed in JavaScript).
 
@@ -19,7 +19,7 @@ Installation
 
 To install and use it, you will need [Bower](http://bower.io/) and [Composer](http://getcomposer.org/):
 
-    wget --no-check-certificate https://github.com/piwi/mde-editor/archive/master.tar.gz
+    wget --no-check-certificate https://github.com/markdown-extended/mde-editor/archive/master.tar.gz
     tar -xvf master.tar.gz
     cd mde-editor-master
     bower install
@@ -106,4 +106,4 @@ License
 
 **MDE-Editor** is authored by Pierre Cassat and licensed under a MIT license.
 
-To transmit a bug or a feature request, see <http://github.com/piwi/mde-editor/issues>.
+To transmit a bug or a feature request, see <http://github.com/markdown-extended/mde-editor/issues>.
