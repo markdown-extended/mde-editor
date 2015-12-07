@@ -1,8 +1,8 @@
 <?php
 /*
- * This file is part of the PHP-MarkdownExtended package.
+ * This file is part of the PHP-Markdown-Extended package.
  *
- * (c) Pierre Cassat <me@e-piwi.fr> and contributors
+ * Copyright (c) 2008-2015, Pierre Cassat <me@e-piwi.fr> and contributors
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,10 +10,9 @@
 
 namespace MarkdownExtended\Grammar\Filter;
 
-use MarkdownExtended\MarkdownExtended;
-use MarkdownExtended\Grammar\Filter;
-use MarkdownExtended\Helper as MDE_Helper;
-use MarkdownExtended\Exception as MDE_Exception;
+use \MarkdownExtended\Grammar\Filter;
+use \MarkdownExtended\Util\Helper;
+use \MarkdownExtended\API\Kernel;
 
 /**
  * Process Markdown fenced code blocks
@@ -24,12 +23,10 @@ use MarkdownExtended\Exception as MDE_Exception;
  *      my content ...
  *      ~~~~
  *
- * @package MarkdownExtended\Grammar\Filter
  */
 class FencedCodeBlock
     extends Filter
 {
-
     /**
      * @param   string  $text
      * @return  string
@@ -63,16 +60,14 @@ class FencedCodeBlock
     protected function _callback($matches)
     {
         $language  = $matches[2];
-        $codeblock = MDE_Helper::escapeCodeContent($matches[3]);
+        $codeblock = Helper::escapeCodeContent($matches[3]);
         $codeblock = preg_replace_callback('/^\n+/', array($this, '_newlines'), $codeblock);
 
         $attributes = array();
         if (!empty($language)) {
-            $attribute = MarkdownExtended::getConfig('fcb_language_attribute');
-            $attributes[$attribute] = MDE_Helper::fillPlaceholders(
-                MarkdownExtended::getConfig('fcb_attribute_value_mask'), $language);
+            $attributes['language'] = $language;
         }
-        $codeblock = MarkdownExtended::get('OutputFormatBag')
+        $codeblock = Kernel::get('OutputFormatBag')
             ->buildTag('preformatted', $codeblock, $attributes);
         return "\n\n" . parent::hashBlock($codeblock) . "\n\n";
     }
@@ -85,10 +80,6 @@ class FencedCodeBlock
      */
     protected function _newlines($matches)
     {
-        return str_repeat(MarkdownExtended::get('OutputFormatBag')->buildTag('new_line'), strlen($matches[0]));
+        return str_repeat(Kernel::get('OutputFormatBag')->buildTag('new_line'), strlen($matches[0]));
     }
-
-
 }
-
-// Endfile

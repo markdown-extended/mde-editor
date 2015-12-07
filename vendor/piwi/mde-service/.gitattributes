@@ -1,5 +1,0 @@
-* text=auto
-
-.git*   text export-ignore
-vendor/ export-ignore
-build/  export-ignore

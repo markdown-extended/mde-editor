@@ -1,21 +1,32 @@
 <?php
 /*
- * This file is part of the PHP-MarkdownExtended package.
+ * This file is part of the PHP-Markdown-Extended package.
  *
- * (c) Pierre Cassat <me@e-piwi.fr> and contributors
+ * Copyright (c) 2008-2015, Pierre Cassat <me@e-piwi.fr> and contributors
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-// Show errors at least initially
-@ini_set('display_errors','1'); @error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT);
+// get a well-formatted path
+$bootstrapGetPath = function ($parts) {
+    return implode(DIRECTORY_SEPARATOR, array_map(
+        function ($p) { return str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $p); },
+        is_array($parts) ? $parts : array($parts)
+    ));
+};
 
-// Namespaces loader
-require __DIR__.'/../src/bootstrap.php';
-
-// silent errors
-@error_reporting(-1);
+// namespaces loader if needed
+if (!defined('MDE_BASE_PATH')) {
+    if (file_exists($bootstrapper = $bootstrapGetPath(array(__DIR__, 'bootstrap.php')))) {
+        require_once $bootstrapper;
+    } else {
+        trigger_error(
+            sprintf('MarkdownExtended bootstrapper not found (searching "%s")', $bootstrapper),
+            E_USER_ERROR
+        );
+    }
+}
 
 // standard markdown functions for compatibility
 
@@ -24,21 +35,11 @@ require __DIR__.'/../src/bootstrap.php';
  *
  * @param   string  $text
  * @param   mixed   $options
- * @param   string  $type   The part of the content to get ; can be 'full', 'body' (default)
- *                          or false to get the `Content` object
- * @return  string
+ * @return  \MarkdownExtended\API\ContentInterface
  */
-function Markdown($text, $options = null, $type = 'body')
+function Markdown($text, $options = null)
 {
-    \MarkdownExtended\MarkdownExtended::getInstance()
-        ->transformString($text, $options);
-    if ($type==='full') {
-        return \MarkdownExtended\MarkdownExtended::getFullContent();
-    } elseif ($type==='body') {
-        return \MarkdownExtended\MarkdownExtended::getContent()->getBody();
-    } else {
-        return \MarkdownExtended\MarkdownExtended::getContent();
-    }
+    return \MarkdownExtended\MarkdownExtended::parseString($text, $options);
 }
 
 /**
@@ -46,31 +47,9 @@ function Markdown($text, $options = null, $type = 'body')
  *
  * @param   string  $file_name
  * @param   mixed   $options
- * @param   string  $type   The part of the content to get ; can be 'full', 'body' (default)
- *                          or false to get the `Content` object
- * @return  string
+ * @return  \MarkdownExtended\API\ContentInterface
  */
-function MarkdownFromSource($file_name, $options = null, $type = 'body')
+function MarkdownFromSource($file_name, $options = null)
 {
-    \MarkdownExtended\MarkdownExtended::getInstance()
-        ->transformSource($file_name, $options);
-    if ($type==='full') {
-        return \MarkdownExtended\MarkdownExtended::getFullContent();
-    } elseif ($type==='body') {
-        return \MarkdownExtended\MarkdownExtended::getContent()->getBody();
-    } else {
-        return \MarkdownExtended\MarkdownExtended::getContent();
-    }
+    return \MarkdownExtended\MarkdownExtended::parseSource($file_name, $options);
 }
-
-/**
- * Use the MarkdownExtended command line interface
- */
-function MarkdownCli()
-{
-    \MarkdownExtended\MarkdownExtended::getInstance()
-        ->get('CommandLine\Console')
-        ->run();
-}
-
-// Endfile

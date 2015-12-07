@@ -1,8 +1,8 @@
 <?php
 /*
- * This file is part of the PHP-MarkdownExtended package.
+ * This file is part of the PHP-Markdown-Extended package.
  *
- * (c) Pierre Cassat <me@e-piwi.fr> and contributors
+ * Copyright (c) 2008-2015, Pierre Cassat <me@e-piwi.fr> and contributors
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,10 +10,9 @@
 
 namespace MarkdownExtended\OutputFormat;
 
-use \MarkdownExtended\MarkdownExtended;
-use \MarkdownExtended\API as MDE_API;
-use \MarkdownExtended\Helper as MDE_Helper;
-use \MarkdownExtended\Exception as MDE_Exception;
+use \MarkdownExtended\API\OutputFormatInterface;
+use \MarkdownExtended\API\Kernel;
+use \MarkdownExtended\Util\Helper;
 
 /**
  * Format a content in UNIX Manpage format
@@ -30,15 +29,13 @@ use \MarkdownExtended\Exception as MDE_Exception;
  *
  *      ~$ ./bin/markdown-extended -o MANPAGENAME.man -f man path/to/original.md
  *
- * @see https://www.gnu.org/software/groff/
- * @see http://manpages.ubuntu.com/manpages/oneiric/man7/groff_man.7.html
- * @package MarkdownExtended\OutputFormat
+ * @link https://www.gnu.org/software/groff/
+ * @link http://manpages.ubuntu.com/manpages/oneiric/man7/groff_man.7.html
  */
 class Man
     extends AbstractOutputFormat
-    implements MDE_API\OutputFormatInterface
+    implements OutputFormatInterface
 {
-
     /**
      * @var array
      */
@@ -119,7 +116,7 @@ class Man
      * @deprecated Titles are not filtered now
      */
     public static $sections = array(
-        'name', 'synopsis', 'syntax', 'availability', 'description', 'options', 'files', 'resources', 'environment', 'diagnosis', 'bugs', 'author', 'see also', 
+        'name', 'synopsis', 'syntax', 'availability', 'description', 'options', 'files', 'resources', 'environment', 'diagnosis', 'bugs', 'author', 'see also',
         'examples', 'standards', 'license', 'history', 'exit status', 'messages', 'copyright', 'reporting bugs', 'notes'
     );
 
@@ -157,7 +154,7 @@ class Man
 
     /**
      * This will try to call a method `build{TagName}()` if it exists, then will try to use
-     * the object `$tags_map` static to automatically find what to do, and then call the 
+     * the object `$tags_map` static to automatically find what to do, and then call the
      * default `getTagString()` method passing it the arguments.
      *
      * @param string $tag_name
@@ -168,7 +165,7 @@ class Man
      */
     public function buildTag($tag_name, $content = null, array $attributes = array())
     {
-        $_method = 'build'.MDE_Helper::toCamelCase($tag_name);
+        $_method = 'build'.Helper::toCamelCase($tag_name);
         if (method_exists($this, $_method)) {
             return call_user_func_array(
                 array($this, $_method),
@@ -181,7 +178,7 @@ class Man
             );
         }
     }
-    
+
     /**
      * @param string $content
      * @param string $tag_name
@@ -234,6 +231,32 @@ class Man
     }
 
 // -------------------
+// Content's blocks builder
+// -------------------
+
+    public function teardown($text)
+    {
+        $headers    = array();
+        $content    = Kernel::get(Kernel::TYPE_CONTENT);
+
+        foreach ($content->getMetadata() as $name=>$value) {
+            if ($name === 'title') {
+                $headers['name'] = $value;
+            } elseif (in_array($name, self::$headers_meta_data)) {
+                $headers[$name] = $value;
+            }
+        }
+
+        $title = $content->getTitle();
+        if (empty($headers['name']) && $title) {
+            $headers['name'] = $title;
+        }
+
+        $text = $this->buildTag('meta_title', null, $headers) . $text;
+        return $text;
+    }
+
+// -------------------
 // Tag specific builder
 // -------------------
 
@@ -267,10 +290,10 @@ class Man
             $this->_current_title_level = 0;
             return $indent . '.SS ' . $text . $this->new_line;
         } else {
-            $id = isset($attributes['id']) ? $attributes['id'] : $text;
+            $domid = isset($attributes['id']) ? $attributes['id'] : $text;
             $this->_current_title_level = $level;
             return $indent . '.TP '
-                . $id . $this->new_line
+                . $domid . $this->new_line
                 . $this->buildBold($text) . $this->new_line
                 . $this->indent();
         }
@@ -278,18 +301,15 @@ class Man
 
     public function indent()
     {
-        if (!$this->no_paragraphing) {
-            return '.RS' . $this->new_line;
-        }
+        return !$this->no_paragraphing ? '.RS' . $this->new_line : '';
     }
-    
+
     public function unindent()
     {
-        if (!$this->no_paragraphing) {
-            return /*$this->new_line .*/ '.RE' . $this->new_line;
-        }
+        return !$this->no_paragraphing ?
+            /*$this->new_line .*/ '.RE' . $this->new_line : '';
     }
-    
+
     public function buildMetaData($text = null, array $attributes = array())
     {
         $text = $this->escapeString($text);
@@ -297,9 +317,9 @@ class Man
             if (empty($attributes['content']) && !empty($text)) {
                 $attributes['content'] = $text;
             }
-            return '.\" ' . $attributes['name'] . ': ' . $attributes['content'] . $this->new_line;
+            return '.\" ' . $attributes['name'] . ': ' . Helper::getSafeString($attributes['content']) /*. $this->new_line*/;
         }
-        return '.\" ' . $text . $this->new_line;
+        return '.\" ' . $text /*. $this->new_line*/;
     }
 
     public function buildMetaTitle($text = null, array $attributes = array())
@@ -526,7 +546,4 @@ class Man
     {
         return $this->buildBold($text) . ' | ';
     }
-
 }
-
-// Endfile

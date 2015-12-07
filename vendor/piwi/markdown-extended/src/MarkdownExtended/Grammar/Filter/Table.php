@@ -1,8 +1,8 @@
 <?php
 /*
- * This file is part of the PHP-MarkdownExtended package.
+ * This file is part of the PHP-Markdown-Extended package.
  *
- * (c) Pierre Cassat <me@e-piwi.fr> and contributors
+ * Copyright (c) 2008-2015, Pierre Cassat <me@e-piwi.fr> and contributors
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,19 +10,18 @@
 
 namespace MarkdownExtended\Grammar\Filter;
 
-use MarkdownExtended\MarkdownExtended;
-use MarkdownExtended\Grammar\Filter;
-use MarkdownExtended\Helper as MDE_Helper;
-use MarkdownExtended\Exception as MDE_Exception;
+use \MarkdownExtended\API\Kernel;
+use \MarkdownExtended\Grammar\Filter;
+use \MarkdownExtended\Grammar\Lexer;
+use \MarkdownExtended\Util\Helper;
 
 /**
  * Process Markdown tables
- *
- * @package MarkdownExtended\Grammar\Filter
  */
 class Table
     extends Filter
 {
+    protected $table_id;
 
     /**
      * Form HTML tables.
@@ -46,7 +45,7 @@ class Table
      */
     public function transform($text)
     {
-        $less_than_tab = MarkdownExtended::getConfig('less_than_tab');
+        $less_than_tab = Kernel::getConfig('less_than_tab');
 
         // Find tables with leading pipe.
         $text = preg_replace_callback('
@@ -152,9 +151,9 @@ class Table
             $attributes[$n] = array();
             if (preg_match('/^ *-+: *$/', $s)) {
                 $attributes[$n]['style'] = 'text-align:right;';
-            } else if (preg_match('/^ *:-+: *$/', $s)) {
+            } elseif (preg_match('/^ *:-+: *$/', $s)) {
                 $attributes[$n]['style'] = 'text-align:center;';
-            } else if (preg_match('/^ *:-+ *$/', $s)) {
+            } elseif (preg_match('/^ *:-+ *$/', $s)) {
                 $attributes[$n]['style'] = 'text-align:left;';
             }
         }
@@ -164,8 +163,8 @@ class Table
 
         $text = '';
         if (!empty($caption)) {
-            $this->table_id = MDE_Helper::header2Label($caption);
-            $text .= preg_replace_callback('/\[(.*)\]/', array($this, '_doCaption'), parent::runGamut('span_gamut', $caption));
+            $this->table_id = Helper::header2Label($caption);
+            $text .= preg_replace_callback('/\[(.*)\]/', array($this, '_doCaption'), Lexer::runGamut('span_gamut', $caption));
         }
 
         $lines = '';
@@ -173,7 +172,7 @@ class Table
             $line = '';
             // Parsing span elements, including code spans, character escapes,
             // and inline HTML tags, so that pipes inside those gets ignored.
-            $_header    = parent::runGamut('filter:Span', $_header);
+            $_header    = Lexer::runGamut('filter:Span', $_header);
 
             // Split row by cell.
             $_header    = preg_replace('/[|] *$/m', '', $_header);
@@ -185,10 +184,14 @@ class Table
             $headspans = array();
             foreach ($_headers as $_i => $_cell) {
                 if ($_cell=='') {
-                    if ($_i==0) $headspans[1]=2;
-                    else {
-                        if (isset($headspans[$_i-1])) $headspans[$_i-1]++;
-                        else $headspans[$_i-1]=2;
+                    if ($_i==0) {
+                        $headspans[1]=2;
+                    } else {
+                        if (isset($headspans[$_i-1])) {
+                            $headspans[$_i-1]++;
+                        } else {
+                            $headspans[$_i-1]=2;
+                        }
                     }
                 }
             }
@@ -198,14 +201,14 @@ class Table
                     if (isset($headspans[$n])) {
                         $cell_attributes['colspan'] = $headspans[$n];
                     }
-                    $line .= MarkdownExtended::get('OutputFormatBag')
-                        ->buildTag('table_cell_head', parent::runGamut('span_gamut', trim($__header)), $cell_attributes) . "\n";
+                    $line .= Kernel::get('OutputFormatBag')
+                        ->buildTag('table_cell_head', Lexer::runGamut('span_gamut', trim($__header)), $cell_attributes) . "\n";
                 }
             }
-            $lines .= MarkdownExtended::get('OutputFormatBag')
+            $lines .= Kernel::get('OutputFormatBag')
                 ->buildTag('table_line', $line) . "\n";
         }
-        $text .= MarkdownExtended::get('OutputFormatBag')
+        $text .= Kernel::get('OutputFormatBag')
             ->buildTag('table_header', $lines);
 
         // Split content by row.
@@ -216,7 +219,7 @@ class Table
             $line = '';
             // Parsing span elements, including code spans, character escapes,
             // and inline HTML tags, so that pipes inside those gets ignored.
-            $row = parent::runGamut('filter:Span', $row);
+            $row = Lexer::runGamut('filter:Span', $row);
 
             // Split row by cell.
             $row_cells = preg_split('/ *[|] */', $row, $col_count);
@@ -226,30 +229,34 @@ class Table
             $colspans = array();
             foreach ($row_cells as $_i => $_cell) {
                 if ($_cell=='') {
-                    if ($_i==0) $colspans[1]=2;
-                    else {
-                        if (isset($colspans[$_i-1])) $colspans[$_i-1]++;
-                        else $colspans[$_i-1]=2;
+                    if ($_i==0) {
+                        $colspans[1]=2;
+                    } else {
+                        if (isset($colspans[$_i-1])) {
+                            $colspans[$_i-1]++;
+                        } else {
+                            $colspans[$_i-1]=2;
+                        }
                     }
                 }
             }
             foreach ($row_cells as $n => $cell) {
                 if ($cell!='') {
-                $cell_attributes = $attributes[$n];
-                if (isset($colspans[$n])) {
-                    $cell_attributes['colspan'] = $colspans[$n];
-                }
-                $line .= MarkdownExtended::get('OutputFormatBag')
-                    ->buildTag('table_cell', parent::runGamut('span_gamut', trim($cell)), $cell_attributes) . "\n";
+                    $cell_attributes = $attributes[$n];
+                    if (isset($colspans[$n])) {
+                        $cell_attributes['colspan'] = $colspans[$n];
+                    }
+                    $line .= Kernel::get('OutputFormatBag')
+                    ->buildTag('table_cell', Lexer::runGamut('span_gamut', trim($cell)), $cell_attributes) . "\n";
                 }
             }
-            $lines .= MarkdownExtended::get('OutputFormatBag')
+            $lines .= Kernel::get('OutputFormatBag')
                 ->buildTag('table_line', $line) . "\n";
         }
-        $text .= MarkdownExtended::get('OutputFormatBag')
+        $text .= Kernel::get('OutputFormatBag')
             ->buildTag('table_body', $lines);
 
-        $table = MarkdownExtended::get('OutputFormatBag')
+        $table = Kernel::get('OutputFormatBag')
             ->buildTag('table', $text);
         return parent::hashBlock($table) . "\n";
     }
@@ -259,12 +266,9 @@ class Table
      */
     protected function _doCaption($matches)
     {
-        return MarkdownExtended::get('OutputFormatBag')
+        return Kernel::get('OutputFormatBag')
             ->buildTag('table_caption', $matches[0], array(
                 'id'=>$this->table_id
             ));
     }
-
 }
-
-// Endfile

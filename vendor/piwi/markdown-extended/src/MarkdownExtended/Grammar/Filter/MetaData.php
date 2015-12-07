@@ -1,8 +1,8 @@
 <?php
 /*
- * This file is part of the PHP-MarkdownExtended package.
+ * This file is part of the PHP-Markdown-Extended package.
  *
- * (c) Pierre Cassat <me@e-piwi.fr> and contributors
+ * Copyright (c) 2008-2015, Pierre Cassat <me@e-piwi.fr> and contributors
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,20 +10,15 @@
 
 namespace MarkdownExtended\Grammar\Filter;
 
-use MarkdownExtended\MarkdownExtended;
-use MarkdownExtended\Grammar\Filter;
-use MarkdownExtended\Helper as MDE_Helper;
-use MarkdownExtended\Exception as MDE_Exception;
+use \MarkdownExtended\Grammar\Filter;
+use \MarkdownExtended\API\Kernel;
 
 /**
  * Process Markdown meta data
- *
- * @package MarkdownExtended\Grammar\Filter
  */
 class MetaData
     extends Filter
 {
-
     /**
      * @var     array
      */
@@ -32,7 +27,7 @@ class MetaData
     /**
      * @var     array
      */
-    protected $special_metadata;
+    protected $special_metadata = array();
 
     /**
      * @var     int
@@ -44,10 +39,12 @@ class MetaData
      */
     public function _setup()
     {
-        MarkdownExtended::setVar('metadata', array());
+        Kernel::setConfig('metadata', array());
         $this->metadata = array();
-        $this->special_metadata = MarkdownExtended::getConfig('special_metadata');
-        if (empty($this->special_metadata)) $this->special_metadata = array();
+        $this->special_metadata = Kernel::getConfig('special_metadata');
+        if (empty($this->special_metadata)) {
+            $this->special_metadata = array();
+        }
         self::$inMetaData = -1;
     }
 
@@ -74,8 +71,10 @@ class MetaData
             }
         }
         if (!empty($this->metadata)) {
-            MarkdownExtended::setVar('metadata', $this->metadata);
-            MarkdownExtended::getContent()->setMetadata($this->metadata);
+            Kernel::setConfig('metadata', $this->metadata);
+            foreach ($this->metadata as $var=>$val) {
+                Kernel::get(Kernel::TYPE_CONTENT)->addMetadata($var, $val);
+            }
         }
         return $text;
     }
@@ -93,7 +92,9 @@ class MetaData
             $line = preg_replace_callback(
                 '/^\s*(.+)$/', array($this, '_callback_nextline'), $line);
         }
-        if (strlen($line)) $line .= "\n";
+        if (strlen($line)) {
+            $line .= "\n";
+        }
         return $line;
     }
 
@@ -106,7 +107,7 @@ class MetaData
         $meta_key = strtolower(str_replace(' ', '', $matches[1]));
         $this->metadata[$meta_key] = trim($matches[2]);
         if (in_array($meta_key, $this->special_metadata)) {
-            MarkdownExtended::setVar($meta_key, $this->metadata[$meta_key]);
+            Kernel::setConfig($meta_key, $this->metadata[$meta_key]);
         }
         return '';
     }
@@ -127,33 +128,19 @@ class MetaData
      */
     public function append($text)
     {
-        $metadata = MarkdownExtended::getVar('metadata');
+        $metadata = Kernel::getConfig('metadata');
         if (!empty($metadata)) {
-            $metadata_str='';
-            foreach($metadata as $meta_name=>$meta_value) {
+            foreach ($metadata as $meta_name=>$meta_value) {
                 if (!empty($meta_name) && is_string($meta_name)) {
                     if (in_array($meta_name, $this->special_metadata)) {
-                        MarkdownExtended::setConfig($meta_name, $meta_value);
-                    } else {
-                        if ($meta_name=='title') {
-                            MarkdownExtended::getContent()
-                                ->setTitle($meta_value);
-                        } else {
-                            $metadata_str .= "\n" . MarkdownExtended::get('OutputFormatBag')
-                                ->buildTag('meta_data', null, array(
-                                    'name'=>$meta_name,
-                                    'content'=>$meta_value
-                                ));
-                        }
+                        Kernel::setConfig($meta_name, $meta_value);
+                    } elseif ($meta_name=='title') {
+                        Kernel::get(Kernel::TYPE_CONTENT)
+                            ->setTitle($meta_value);
                     }
                 }
             }
-            MarkdownExtended::getContent()
-                ->setMetadataToString($metadata_str);
         }
         return $text;
     }
-
 }
-
-// Endfile

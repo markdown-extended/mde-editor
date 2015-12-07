@@ -1,8 +1,8 @@
 <?php
 /*
- * This file is part of the PHP-MarkdownExtended package.
+ * This file is part of the PHP-Markdown-Extended package.
  *
- * (c) Pierre Cassat <me@e-piwi.fr> and contributors
+ * Copyright (c) 2008-2015, Pierre Cassat <me@e-piwi.fr> and contributors
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,43 +10,39 @@
 
 namespace MarkdownExtended\Grammar\Filter;
 
-use MarkdownExtended\MarkdownExtended;
-use MarkdownExtended\Grammar\Filter;
-use MarkdownExtended\Helper as MDE_Helper;
-use MarkdownExtended\Exception as MDE_Exception;
+use \MarkdownExtended\Grammar\Filter;
+use \MarkdownExtended\API\Kernel;
+use \MarkdownExtended\Grammar\Lexer;
 
 /**
  * Process Markdown emphasis: bold & italic
- *
- * @package MarkdownExtended\Grammar\Filter
  */
 class Emphasis
     extends Filter
 {
-
     /**#@+
      * Redefining emphasis markers so that emphasis by underscore does not
      * work in the middle of a word.
      */
-    var $em_relist = array(
+    public $em_relist = array(
         ''  => '(?:(?<!\*)\*(?!\*)|(?<![a-zA-Z0-9_])_(?!_))(?=\S|$)(?![\.,:;]\s)',
         '*' => '(?<=\S|^)(?<!\*)\*(?!\*)',
         '_' => '(?<=\S|^)(?<!_)_(?![a-zA-Z0-9_])',
     );
 
-    var $strong_relist = array(
+    public $strong_relist = array(
         ''   => '(?:(?<!\*)\*\*(?!\*)|(?<![a-zA-Z0-9_])__(?!_))(?=\S|$)(?![\.,:;]\s)',
         '**' => '(?<=\S|^)(?<!\*)\*\*(?!\*)',
         '__' => '(?<=\S|^)(?<!_)__(?![a-zA-Z0-9_])',
     );
 
-    var $em_strong_relist = array(
+    public $em_strong_relist = array(
         ''    => '(?:(?<!\*)\*\*\*(?!\*)|(?<![a-zA-Z0-9_])___(?!_))(?=\S|$)(?![\.,:;]\s)',
         '***' => '(?<=\S|^)(?<!\*)\*\*\*(?!\*)',
         '___' => '(?<=\S|^)(?<!_)___(?![a-zA-Z0-9_])',
     );
 
-    static $em_strong_prepared_relist;
+    public static $em_strong_prepared;
     /**#@-*/
 
     /**
@@ -66,7 +62,7 @@ class Emphasis
 
                 // Construct master expression from list.
                 $token_re = '{('. implode('|', $token_relist) .')}';
-                self::$em_strong_prepared_relist["$em$strong"] = $token_re;
+                self::$em_strong_prepared["$em$strong"] = $token_re;
             }
         }
     }
@@ -79,14 +75,14 @@ class Emphasis
     {
         $token_stack = array('');
         $text_stack = array('');
-        $em = '';
+        $italic = '';
         $strong = '';
         $tree_char_em = false;
 
         while (1) {
 
             // Get prepared regular expression for seraching emphasis tokens in current context.
-            $token_re = self::$em_strong_prepared_relist["$em$strong"];
+            $token_re = self::$em_strong_prepared["$italic$strong"];
 
             // Each loop iteration search for the next emphasis token.
             // Each token is then passed to handleSpanToken.
@@ -110,49 +106,49 @@ class Emphasis
                 if ($token_len == 3) {
                     // Three-char closing marker, close em and strong.
                     array_shift($token_stack);
-                    $span = parent::runGamut('span_gamut', array_shift($text_stack));
-                    $span = MarkdownExtended::get('OutputFormatBag')
+                    $span = Lexer::runGamut('span_gamut', array_shift($text_stack));
+                    $span = Kernel::get('OutputFormatBag')
                         ->buildTag('italic', $span);
-                    $span = MarkdownExtended::get('OutputFormatBag')
+                    $span = Kernel::get('OutputFormatBag')
                         ->buildTag('bold', $span);
                     $text_stack[0] .= parent::hashPart($span);
-                    $em = '';
+                    $italic = '';
                     $strong = '';
                 } else {
                     // Other closing marker: close one em or strong and
                     // change current token state to match the other
                     $token_stack[0] = str_repeat($token{0}, 3-$token_len);
                     $tag = $token_len == 2 ? "bold" : "italic";
-                    $span = parent::runGamut('span_gamut', $text_stack[0]);
-                    $span = MarkdownExtended::get('OutputFormatBag')
+                    $span = Lexer::runGamut('span_gamut', $text_stack[0]);
+                    $span = Kernel::get('OutputFormatBag')
                         ->buildTag($tag, $span);
                     $text_stack[0] = parent::hashPart($span);
-                    $$tag = ''; // $$tag stands for $em or $strong
+                    $$tag = ''; // $$tag stands for $italic or $strong
                 }
                 $tree_char_em = false;
-            } else if ($token_len == 3) {
-                if ($em) {
+            } elseif ($token_len == 3) {
+                if ($italic) {
                     // Reached closing marker for both em and strong.
                     // Closing strong marker:
                     for ($i = 0; $i < 2; ++$i) {
                         $shifted_token = array_shift($token_stack);
                         $tag = strlen($shifted_token) == 2 ? "bold" : "italic";
-                        $span = parent::runGamut('span_gamut', array_shift($text_stack));
-                        $span = MarkdownExtended::get('OutputFormatBag')
+                        $span = Lexer::runGamut('span_gamut', array_shift($text_stack));
+                        $span = Kernel::get('OutputFormatBag')
                             ->buildTag($tag, $span);
                         $text_stack[0] .= parent::hashPart($span);
-                        $$tag = ''; // $$tag stands for $em or $strong
+                        $$tag = ''; // $$tag stands for $italic or $strong
                     }
                 } else {
                     // Reached opening three-char emphasis marker. Push on token
                     // stack; will be handled by the special condition above.
-                    $em = $token{0};
-                    $strong = "$em$em";
+                    $italic = $token{0};
+                    $strong = "$italic$italic";
                     array_unshift($token_stack, $token);
                     array_unshift($text_stack, '');
                     $tree_char_em = true;
                 }
-            } else if ($token_len == 2) {
+            } elseif ($token_len == 2) {
                 if ($strong) {
                     // Unwind any dangling emphasis marker:
                     if (strlen($token_stack[0]) == 1) {
@@ -161,8 +157,8 @@ class Emphasis
                     }
                     // Closing strong marker:
                     array_shift($token_stack);
-                    $span = parent::runGamut('span_gamut', array_shift($text_stack));
-                    $span = MarkdownExtended::get('OutputFormatBag')
+                    $span = Lexer::runGamut('span_gamut', array_shift($text_stack));
+                    $span = Kernel::get('OutputFormatBag')
                         ->buildTag('bold', $span);
                     $text_stack[0] .= parent::hashPart($span);
                     $strong = '';
@@ -173,28 +169,25 @@ class Emphasis
                 }
             } else {
                 // Here $token_len == 1
-                if ($em) {
+                if ($italic) {
                     if (strlen($token_stack[0]) == 1) {
                         // Closing emphasis marker:
                         array_shift($token_stack);
-                        $span = parent::runGamut('span_gamut', array_shift($text_stack));
-                        $span = MarkdownExtended::get('OutputFormatBag')
+                        $span = Lexer::runGamut('span_gamut', array_shift($text_stack));
+                        $span = Kernel::get('OutputFormatBag')
                             ->buildTag('italic', $span);
                         $text_stack[0] .= parent::hashPart($span);
-                        $em = '';
+                        $italic = '';
                     } else {
                         $text_stack[0] .= $token;
                     }
                 } else {
                     array_unshift($token_stack, $token);
                     array_unshift($text_stack, '');
-                    $em = $token;
+                    $italic = $token;
                 }
             }
         }
         return $text_stack[0];
     }
-
 }
-
-// Endfile

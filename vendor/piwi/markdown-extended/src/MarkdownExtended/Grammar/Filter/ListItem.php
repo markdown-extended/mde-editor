@@ -1,8 +1,8 @@
 <?php
 /*
- * This file is part of the PHP-MarkdownExtended package.
+ * This file is part of the PHP-Markdown-Extended package.
  *
- * (c) Pierre Cassat <me@e-piwi.fr> and contributors
+ * Copyright (c) 2008-2015, Pierre Cassat <me@e-piwi.fr> and contributors
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,20 +10,17 @@
 
 namespace MarkdownExtended\Grammar\Filter;
 
-use MarkdownExtended\MarkdownExtended;
-use MarkdownExtended\Grammar\Filter;
-use MarkdownExtended\Helper as MDE_Helper;
-use MarkdownExtended\Exception as MDE_Exception;
+use \MarkdownExtended\Grammar\Filter;
+use \MarkdownExtended\API\Kernel;
+use \MarkdownExtended\Grammar\Lexer;
+use \MarkdownExtended\Grammar\GamutLoader;
 
 /**
  * Process Markdown list items
- *
- * @package MarkdownExtended\Grammar\Filter
  */
 class ListItem
     extends Filter
 {
-
     /**
      * @var     int Retain current list level
      */
@@ -45,9 +42,8 @@ class ListItem
      * @param   string  $text
      * @return  string
      */
-    public function transform($text) 
+    public function transform($text)
     {
-        $marker_any_re = '(?:'.self::$marker_ul_re.'|'.self::$marker_ol_re.')';
         $markers_relist = array(
             self::$marker_ul_re => self::$marker_ol_re,
             self::$marker_ol_re => self::$marker_ul_re,
@@ -58,7 +54,7 @@ class ListItem
             $whole_list_re = '
                 (                                   # $1 = whole list
                   (                                 # $2
-                    ([ ]{0,'.MarkdownExtended::getConfig('less_than_tab').'})   # $3 = number of spaces
+                    ([ ]{0,'.Kernel::getConfig('less_than_tab').'})   # $3 = number of spaces
                     ('.$marker_re.')                # $4 = first list item marker
                     [ ]+
                   )
@@ -81,7 +77,7 @@ class ListItem
                   )
                 )
             '; // mx
-            
+
             // We use a different prefix before nested lists than top-level lists.
             // See extended comment in `self::transformItems()`.
             if (self::$list_level) {
@@ -106,14 +102,14 @@ class ListItem
      * @param   array   $matches    A set of results of the `transform` function
      * @return  string
      */
-    protected function _callback($matches) 
+    protected function _callback($matches)
     {
         $marker_any_re = '(?:'.self::$marker_ul_re.'|'.self::$marker_ol_re.')';
         $list = $matches[1] . "\n";
-        $list_type = preg_match('/'.self::$marker_ul_re.'/', $matches[4]) ? "unordered" : "ordered";        
-        $marker_any_re = ( $list_type == "unordered" ? self::$marker_ul_re : self::$marker_ol_re );
-        $list = self::transformItems($list, $marker_any_re);        
-        $block = MarkdownExtended::get('OutputFormatBag')
+        $list_type = preg_match('/'.self::$marker_ul_re.'/', $matches[4]) ? "unordered" : "ordered";
+        $marker_any_re = ($list_type == "unordered" ? self::$marker_ul_re : self::$marker_ol_re);
+        $list = self::transformItems($list, $marker_any_re);
+        $block = Kernel::get('OutputFormatBag')
             ->buildTag($list_type . '_list', $list);
         return "\n" . parent::hashBlock($block) . "\n\n";
     }
@@ -147,7 +143,7 @@ class ListItem
      * @param   string  $marker_any_re  The marker we are processing
      * @return  string                  The list string parsed
      */
-    public function transformItems($list_str, $marker_any_re) 
+    public function transformItems($list_str, $marker_any_re)
     {
         self::$list_level++;
 
@@ -174,7 +170,7 @@ class ListItem
      * @param   array   $matches    A set of results of the `transform()` function
      * @return  string
      */
-    protected function _items_callback($matches) 
+    protected function _items_callback($matches)
     {
         $item                   =   $matches[4];
         $leading_line           =&  $matches[1];
@@ -185,19 +181,15 @@ class ListItem
         if ($leading_line || $trailing_blank_line || preg_match('/\n{2,}/', $item)) {
             // Replace marker with the appropriate whitespace indentation
             $item = $leading_space . str_repeat(' ', strlen($marker_space)) . $item;
-            $item = parent::runGamut('html_block_gamut', parent::runGamut('tool:Outdent', $item)."\n");
+            $item = Lexer::runGamut('html_block_gamut', Lexer::runGamut(GamutLoader::TOOL_ALIAS.':Outdent', $item)."\n");
         } else {
             // Recursion for sub-lists:
-            $item = self::transform(parent::runGamut('tool:Outdent', $item));
+            $item = self::transform(Lexer::runGamut(GamutLoader::TOOL_ALIAS.':Outdent', $item));
             $item = preg_replace('/\n+$/', '', $item);
-            $item = parent::runGamut('span_gamut', $item);
+            $item = Lexer::runGamut('span_gamut', $item);
         }
 
-        return MarkdownExtended::get('OutputFormatBag')
-//            ->buildTag('list_item', $item) . "\n";
-            ->buildTag('list_item', $item);
+        return Kernel::get('OutputFormatBag')
+            ->buildTag('list_item', $item)/* . "\n"*/;
     }
-
 }
-
-// Endfile

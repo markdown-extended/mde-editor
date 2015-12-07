@@ -1,8 +1,8 @@
 <?php
 /*
- * This file is part of the PHP-MarkdownExtended package.
+ * This file is part of the PHP-Markdown-Extended package.
  *
- * (c) Pierre Cassat <me@e-piwi.fr> and contributors
+ * Copyright (c) 2008-2015, Pierre Cassat <me@e-piwi.fr> and contributors
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,29 +11,43 @@
 namespace MarkdownExtended\API;
 
 /**
- * PHP Markdown Extended OutputFormat interface
- *
- * @package MarkdownExtended\API
+ * Interface to implement for any output format object
  */
 interface OutputFormatInterface
 {
-
     /**
-     * @param   string  $tag_name
-     * @param   string  $content
+     * This may construct a valid string for concerned tag, content and attributes
+     *
+     * @param   string  $tag_name       The tag name to construct
+     * @param   string  $content        Concerned content
      * @param   array   $attributes     An array of attributes constructed like "variable=>value" pairs
+     *
      * @return  string
      */
     public function buildTag($tag_name, $content = null, array $attributes = array());
 
     /**
-     * @param   string  $content
-     * @param   string  $tag_name
+     * @param   string  $content        Concerned content
+     * @param   string  $tag_name       The tag name to construct
      * @param   array   $attributes     An array of attributes constructed like "variable=>value" pairs
+     *
      * @return  string
      */
     public function getTagString($content, $tag_name, array $attributes = array());
 
-}
+    /**
+     * Gets the notes list as string
+     *
+     * @param   array $notes
+     * @param   \MarkdownExtended\API\ContentInterface $content
+     */
+    public function getNotesToString(array $notes, ContentInterface $content);
 
-// Endfile
+    /**
+     * Gets the metadata list as string
+     *
+     * @param   array $metadata
+     * @param   \MarkdownExtended\API\ContentInterface $content
+     */
+    public function getMetadataToString(array $metadata, ContentInterface $content);
+}

@@ -1,8 +1,8 @@
 <?php
 /*
- * This file is part of the PHP-MarkdownExtended package.
+ * This file is part of the PHP-Markdown-Extended package.
  *
- * (c) Pierre Cassat <me@e-piwi.fr> and contributors
+ * Copyright (c) 2008-2015, Pierre Cassat <me@e-piwi.fr> and contributors
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,20 +10,15 @@
 
 namespace MarkdownExtended\Grammar\Filter;
 
-use MarkdownExtended\MarkdownExtended;
-use MarkdownExtended\Grammar\Filter;
-use MarkdownExtended\Helper as MDE_Helper;
-use MarkdownExtended\Exception as MDE_Exception;
+use \MarkdownExtended\Grammar\Filter;
+use \MarkdownExtended\API\Kernel;
 
 /**
  * Process Markdown horizontal rules
- *
- * @package MarkdownExtended\Grammar\Filter
  */
 class HorizontalRule
     extends Filter
 {
-
     /**
      * @param   string  $text
      * @return  string
@@ -41,10 +36,7 @@ class HorizontalRule
                 [ ]*            # Tailing spaces
                 $               # End of line.
             }mx',
-            "\n" . parent::hashBlock(MarkdownExtended::get('OutputFormatBag')->buildTag('horizontal_rule')) . "\n",
+            "\n" . parent::hashBlock(Kernel::get('OutputFormatBag')->buildTag('horizontal_rule')) . "\n",
             $text);
     }
-
 }
-
-// Endfile

@@ -18,7 +18,7 @@ Bugs are inevitable and exist in all software. If you find one and want to trans
 But ... a bug report is helpful as long as it can be understood, reproduced, and that it permits to
 identify the error (and what caused it). A good bug report MUST follow these guidelines:
 
--   **first**: search in the issue tracker if your bug has not been transmitted yet ; if you find it,
+-   **first**: search in the issue tracker if your bug has not been transmitted yet ; if you find an existing one,
     you can add a new comment to the appropriate thread with your experience if it seems different
     from the others ;
 -   **then**: check if it exists right now: try to reproduce it with the current code to confirm it still exists ;
@@ -49,7 +49,7 @@ Actually change the code
 First of all, you may do the following two things:
 
 -   read the *How to contribute* section below to learn about forking, working and pulling,
--   from your fork of the repository, switch to the `wip` branch: this is where the dev things are done.
+-   from your fork of the repository, switch to the `dev` branch: this is where the dev things are done.
 
 
 ### How to contribute ?
@@ -78,11 +78,11 @@ comment the request with your vision of the thing or your experience.
 ### Full installation of a fork
 
 To prepare a development version of PHP MarkdownExtended, clone your fork of the repository and
-put it on the "wip" branch:
+put it on the "dev" branch:
 
     git clone http://github.com/<your-username>/markdown-extended.git
     cd markdown-extended
-    git checkout wip
+    git checkout dev
 
 Then you can create your own branch with the name of your feature:
 
@@ -91,7 +91,7 @@ Then you can create your own branch with the name of your feature:
 The development process of the package requires some external dependencies to work, loaded via
 [Composer](http://getcomposer.org/). To install them, run:
 
-    // install Composer if your don't have it
+    // install Composer if you don't have it
     curl -sS https://getcomposer.org/installer | php
 
     // install PHP dependencies
@@ -110,7 +110,164 @@ and pulling new commits:
     git pull upstream dev
 
 
-### Coding rules
+### Development life-cycle
+
+As said above, all development MUST be done on the `dev` branch of the repository. Doing so we
+can commit our development features to let users using a clone test and improve them.
+
+When the work gets a stable stage, it seems to be time to build and publish a new release. This
+is done by creating a tag named like `vX.Y.Z[-status]` from the "master" branch after having
+merged the "dev" one in. Please see the [Semantic Versioning](http://semver.org/) work by 
+Tom Preston-Werner for more info about the release version name construction rules.
+
+
+How-tos
+-------
+
+All the dependencies used here are installed as "dev-dependencies" by Composer running:
+
+    $ php composer.phar install --dev
+
+### Generate the "PHAR" archive
+
+To automatically re-generate the "markdown-extended.phar" file from current version, you can use:
+
+    $ php bin/mde-dev make-phar
+
+The archive's content can be extracted and check running:
+
+    $ php bin/mde-dev check-phar
+
+### Generate the man-page
+
+To automatically re-generate the manpages of the package, you can use:
+
+    $ php bin/mde-dev make-manpage-3
+    $ php bin/mde-dev make-manpage-7
+    $ php bin/mde-dev make-manpages    # this will run both
+
+To generate them manually, you can run:
+
+    $ bin/markdown-extended -f man -o bin/markdown-extended.3.man doc/MANPAGE.md
+    $ man ./bin/markdown-extended.3.man
+    $ bin/markdown-extended -f man -o bin/markdown-extended.7.man doc/DOCUMENTATION.md
+    $ man ./bin/markdown-extended.7.man
+
+### Check dependencies
+
+The package is integrated in [Version Eye](https://www.versioneye.com/user/projects/550e3650bc1c12efc3000067)
+to check if its dependencies are up-to-date.
+
+### Generate the documentation
+
+The app's API documentation is generated with [Sami](https://github.com/FriendsOfPHP/Sami).
+
+You can (re-)generate a full PHP documentation, at any time, running:
+
+    $ php bin/sami.php update .sami.php
+
+The documentation is built in the `phpdoc/` directory in the package, and requires a temporary
+directory for its generation that is configured on `../tmp/cache/markdown-extended/`.
+You can modify this setting editing the `.sami.php` file.
+
+You can also use the Composer's script shortcut:
+
+    php composer.phar update-doc
+
+### Launch unit-tests
+
+The unit-testing of the app is handled with [PHPUnit](https://phpunit.de/).
+
+You can verify that your package passes all tests running:
+
+    $ php bin/phpunit
+
+All tests are stored in the `tests/` directory of the package and
+the configuration file used by PHPUnit is `phpunit.xml.dist` at the root
+of the package.
+
+Note that the package is integrated in [Travis CI](https://travis-ci.org/piwi/markdown-extended/builds).
+
+You can also use the Composer's script shortcut:
+
+    php composer.phar test
+
+### Fix coding standards errors
+
+You can check and fix code writing errors using [PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer)
+by running:
+
+    $ php bin/php-cs-fixer fix -v
+
+This tool loads and uses the `.php_cs` configuration file by default.
+
+You can also use the Composer's script shortcut:
+
+    php composer.phar cs-fixer
+
+### Mess detection & code quality
+
+App's code "mess" can be tested with [PHP Mess Detector](http://phpmd.org/).
+
+You can check code mess running:
+
+    $ php bin/phpmd src text codesize
+
+Note that the package is integrated in [Code Climate](https://codeclimate.com/github/piwi/markdown-extended).
+
+### Make a new release
+
+To make a new release of the package, you must follow these steps:
+
+1.  merge the "dev" branch into "master"
+
+        git checkout master
+        git merge --no-ff --no-commit dev
+
+2.  fix code standards errors:
+
+        php composer.phar cs-fixer
+
+3.  validate unit-tests:
+
+        php composer.phar tests
+
+4.  bump new version number and commit:
+
+        php bin/mde-dev make-release --release=X.Y.Z-SATE
+
+5.  update the changelog ; you can use <https://github.com/atelierspierrot/atelierspierrot/blob/master/console/git-changelog.sh>.
+
+6.  commit changes:
+
+        git commit -a -m "preparing release X.Y.Z-STATE"
+
+7.  create the release tag and publish it:
+
+        git tag -a vX.Y.Z-STATE -m "new release ..."
+        git push origin vX.Y.Z-STATE
+
+8.  build new PHAR archive and publish it into the "phar-latest" branch:
+
+        php bin/mde-dev make-phar
+        git checkout phar-latest
+        rm -f bin/markdown-extended.phar && mv markdown-extended.phar bin/
+        git commit -a -m "new X.Y.Z-STATE phar"
+
+9.  merge "master" into "dev":
+
+        git checkout dev
+        git merge --no-ff master
+
+Finally, don't forget to push all changes to `origin` and to make a release page
+on GitHub's repository. The best practice is to attach the PHAR archive to the release.
+
+Coding rules
+------------
+
+You MUST follow the [PHP Standard Recommendations](http://www.php-fig.org/).
+
+Always keep in mind the followings:
 
 -   use space (no tab) ; 1 tab = 4 spaces ; this is valid for all languages
 -   comment your work (just enough)

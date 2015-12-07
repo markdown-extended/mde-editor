@@ -1,8 +1,8 @@
 <?php
 /*
- * This file is part of the PHP-MarkdownExtended package.
+ * This file is part of the PHP-Markdown-Extended package.
  *
- * (c) Pierre Cassat <me@e-piwi.fr> and contributors
+ * Copyright (c) 2008-2015, Pierre Cassat <me@e-piwi.fr> and contributors
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,20 +10,18 @@
 
 namespace MarkdownExtended\Grammar\Filter;
 
-use MarkdownExtended\MarkdownExtended;
-use MarkdownExtended\Grammar\Filter;
-use MarkdownExtended\Helper as MDE_Helper;
-use MarkdownExtended\Exception as MDE_Exception;
+use \MarkdownExtended\Grammar\Filter;
+use \MarkdownExtended\Grammar\Lexer;
+use \MarkdownExtended\Util\Helper;
+use \MarkdownExtended\API\Kernel;
+use \MarkdownExtended\Grammar\GamutLoader;
 
 /**
  * Process Markdown code blocks
- *
- * @package MarkdownExtended\Grammar\Filter
  */
 class CodeBlock
     extends Filter
 {
-
     /**
      *  Process Markdown `<pre><code>` blocks.
      *
@@ -36,11 +34,11 @@ class CodeBlock
                 (?:\n\n|\A\n?)
                 (                                                     # $1 = the code block -- one or more lines, starting with a space/tab
                   (?>
-                    [ ]{'.MarkdownExtended::getConfig('tab_width').'} # Lines must start with a tab or a tab-width of spaces
+                    [ ]{'.Kernel::getConfig('tab_width').'} # Lines must start with a tab or a tab-width of spaces
                     .*\n+
                   )+
                 )
-                ((?=^[ ]{0,'.MarkdownExtended::getConfig('tab_width').'}\S)|\Z) # Lookahead for non-space at line-start, or end of doc
+                ((?=^[ ]{0,'.Kernel::getConfig('tab_width').'}\S)|\Z) # Lookahead for non-space at line-start, or end of doc
             }xm',
             array($this, '_callback'), $text);
     }
@@ -53,11 +51,11 @@ class CodeBlock
      */
     protected function _callback($matches)
     {
-        $codeblock = parent::runGamut('tool:Outdent', $matches[1]);
-        $codeblock = MDE_Helper::escapeCodeContent($codeblock);
+        $codeblock = Lexer::runGamut(GamutLoader::TOOL_ALIAS.':Outdent', $matches[1]);
+        $codeblock = Helper::escapeCodeContent($codeblock);
         # trim leading newlines and trailing newlines
         $codeblock = preg_replace('/\A\n+|\n+\z/', '', $codeblock);
-        $codeblock = MarkdownExtended::get('OutputFormatBag')
+        $codeblock = Kernel::get('OutputFormatBag')
             ->buildTag('preformatted', $codeblock);
         return "\n\n".parent::hashBlock($codeblock)."\n\n";
     }
@@ -70,11 +68,8 @@ class CodeBlock
      */
     public function span($code)
     {
-        $codeblock = MarkdownExtended::get('OutputFormatBag')
-            ->buildTag('code', MDE_Helper::escapeCodeContent(trim($code)));
+        $codeblock = Kernel::get('OutputFormatBag')
+            ->buildTag('code', Helper::escapeCodeContent(trim($code)));
         return parent::hashPart($codeblock);
     }
-
 }
-
-// Endfile

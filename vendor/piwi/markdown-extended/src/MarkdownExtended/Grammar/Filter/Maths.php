@@ -1,8 +1,8 @@
 <?php
 /*
- * This file is part of the PHP-MarkdownExtended package.
+ * This file is part of the PHP-Markdown-Extended package.
  *
- * (c) Pierre Cassat <me@e-piwi.fr> and contributors
+ * Copyright (c) 2008-2015, Pierre Cassat <me@e-piwi.fr> and contributors
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,22 +10,17 @@
 
 namespace MarkdownExtended\Grammar\Filter;
 
-use MarkdownExtended\MarkdownExtended;
-use MarkdownExtended\Grammar\Filter;
-use MarkdownExtended\Helper as MDE_Helper;
-use MarkdownExtended\Exception as MDE_Exception;
+use \MarkdownExtended\Grammar\Filter;
+use \MarkdownExtended\API\Kernel;
 
 /**
  * Process Markdown mathematics
  *
  * taken from <http://github.com/drdrang/php-markdown-extra-math>
- *
- * @package MarkdownExtended\Grammar\Filter
  */
 class Maths
     extends Filter
 {
-
     /**
      * Wrap text between \[ and \] in display math tags.
      *
@@ -55,7 +50,7 @@ class Maths
     {
         $texblock   = $matches[1];
         $texblock   = trim($texblock);
-        $block      = MarkdownExtended::get('OutputFormatBag')
+        $block      = Kernel::get('OutputFormatBag')
             ->buildTag('maths_block', $texblock, array());
         return "\n\n".parent::hashBlock($block)."\n\n";
     }
@@ -69,11 +64,8 @@ class Maths
     public function span($texblock)
     {
         $texblock   = trim($texblock);
-        $block      = MarkdownExtended::get('OutputFormatBag')
+        $block      = Kernel::get('OutputFormatBag')
             ->buildTag('maths_span', $texblock, array());
         return parent::hashPart($block);
     }
-
 }
-
-// Endfile

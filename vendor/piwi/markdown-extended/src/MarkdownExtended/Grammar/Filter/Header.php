@@ -1,8 +1,8 @@
 <?php
 /*
- * This file is part of the PHP-MarkdownExtended package.
+ * This file is part of the PHP-Markdown-Extended package.
  *
- * (c) Pierre Cassat <me@e-piwi.fr> and contributors
+ * Copyright (c) 2008-2015, Pierre Cassat <me@e-piwi.fr> and contributors
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,10 +10,10 @@
 
 namespace MarkdownExtended\Grammar\Filter;
 
-use MarkdownExtended\MarkdownExtended;
-use MarkdownExtended\Grammar\Filter;
-use MarkdownExtended\Helper as MDE_Helper;
-use MarkdownExtended\Exception as MDE_Exception;
+use \MarkdownExtended\Grammar\Filter;
+use \MarkdownExtended\Grammar\Lexer;
+use \MarkdownExtended\Util\Helper;
+use \MarkdownExtended\API\Kernel;
 
 /**
  * Process Markdown headers
@@ -22,7 +22,7 @@ use MarkdownExtended\Exception as MDE_Exception;
  *
  *    Header 1  {#header1}
  *    ========
- *  
+ *
  *    Header 2  {#header2}
  *    --------
  *
@@ -34,12 +34,10 @@ use MarkdownExtended\Exception as MDE_Exception;
  *  ...
  *  ###### Header 6   {#header2}
  *
- * @package MarkdownExtended\Grammar\Filter
  */
 class Header
     extends Filter
 {
-
     /**
      * Redefined to add id attribute support.
      *
@@ -87,21 +85,6 @@ class Header
         $level = ($matches[3]{0} == '=' ? 1 : 2)  + $this->_getRebasedHeaderLevel();
         return "\n".str_pad('#', $level, '#').' '.$matches[1].' '
             .(!empty($matches[2]) ? '{#'.$matches[2].'}' : '')."\n";
-/*
-        $id  = MarkdownExtended::getContent()->setNewDomId($matches[2], null, false);
-        $title = parent::runGamut('span_gamut', $matches[1]);
-        MarkdownExtended::getContent()
-            ->addMenu(array('level'=>$level,'text'=>$title), $id);
-        $block = MarkdownExtended::get('OutputFormatBag')
-            ->buildTag('title', $title, array(
-                'level'=>$level,
-                'id'=>$id
-            ));
-
-        $this->_setContentTitle($title);
-
-        return "\n" . parent::hashBlock($block) . "\n\n";
-*/
     }
 
     /**
@@ -113,18 +96,17 @@ class Header
     protected function _atx_callback($matches)
     {
         $level = strlen($matches[1]) + $this->_getRebasedHeaderLevel();
-        $id  = !empty($matches[3]) ?
+        $domid  = !empty($matches[3]) ?
             $matches[3]
             :
-            MDE_Helper::header2Label($matches[2]);
-        $id  = MarkdownExtended::getContent()->setNewDomId($id, null, false);
-        $title = parent::runGamut('span_gamut', $matches[2]);
-        MarkdownExtended::getContent()
-            ->addMenu(array('level'=>$level,'text'=>parent::unhash($title)), $id);
-        $block = MarkdownExtended::get('OutputFormatBag')
+            Helper::header2Label($matches[2]);
+        $domid  = Kernel::get('DomId')->set($domid);
+        $title = Lexer::runGamut('span_gamut', $matches[2]);
+        Kernel::addConfig('menu', array('level'=>$level, 'text'=>parent::unhash($title)), $domid);
+        $block = Kernel::get('OutputFormatBag')
             ->buildTag('title', $title, array(
                 'level'=>$level,
-                'id'=>$id
+                'id'=>$domid
             ));
 
         $this->_setContentTitle($title);
@@ -137,7 +119,7 @@ class Header
      */
     protected function _getRebasedHeaderLevel()
     {
-        $base_level = MarkdownExtended::getVar('baseheaderlevel');
+        $base_level = Kernel::getConfig('baseheaderlevel');
         return !empty($base_level) ? $base_level-1 : 0;
     }
 
@@ -146,14 +128,11 @@ class Header
      */
     protected function _setContentTitle($string)
     {
-        $old = MarkdownExtended::getContent()->getTitle();
+        $old = Kernel::get(Kernel::TYPE_CONTENT)->getTitle();
         if (empty($old)) {
-            $meta = MarkdownExtended::getContent()->getMetadata();
+            $meta = Kernel::get(Kernel::TYPE_CONTENT)->getMetadata();
             $meta['title'] = $string;
-            MarkdownExtended::getContent()->setMetadata($meta);
+            Kernel::get(Kernel::TYPE_CONTENT)->setMetadata($meta);
         }
     }
-
 }
-
-// Endfile

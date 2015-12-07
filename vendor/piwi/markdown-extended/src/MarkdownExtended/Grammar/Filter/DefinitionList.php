@@ -1,8 +1,8 @@
 <?php
 /*
- * This file is part of the PHP-MarkdownExtended package.
+ * This file is part of the PHP-Markdown-Extended package.
  *
- * (c) Pierre Cassat <me@e-piwi.fr> and contributors
+ * Copyright (c) 2008-2015, Pierre Cassat <me@e-piwi.fr> and contributors
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,10 +10,10 @@
 
 namespace MarkdownExtended\Grammar\Filter;
 
-use MarkdownExtended\MarkdownExtended;
-use MarkdownExtended\Grammar\Filter;
-use MarkdownExtended\Helper as MDE_Helper;
-use MarkdownExtended\Exception as MDE_Exception;
+use \MarkdownExtended\Grammar\Filter;
+use \MarkdownExtended\API\Kernel;
+use \MarkdownExtended\Grammar\Lexer;
+use \MarkdownExtended\Grammar\GamutLoader;
 
 /**
  * Process Markdown definitions lists
@@ -21,8 +21,8 @@ use MarkdownExtended\Exception as MDE_Exception;
  * Definitions lists may be written as:
  *
  *       Term 1
- *        :   This is a definition with two paragraphs. Lorem ipsum 
- *            dolor sit amet, consectetuer adipiscing elit. Aliquam 
+ *        :   This is a definition with two paragraphs. Lorem ipsum
+ *            dolor sit amet, consectetuer adipiscing elit. Aliquam
  *            hendrerit mi posuere lectus.
  *
  *           Vestibulum enim wisi, viverra nec, fringilla in, laoreet
@@ -34,21 +34,19 @@ use MarkdownExtended\Exception as MDE_Exception;
  *        Term 2
  *        :   This definition has a code block, a blockquote and a list.
  *
- * @package MarkdownExtended\Grammar\Filter
  */
 class DefinitionList
     extends Filter
 {
-
     /**
      * Form HTML definition lists.
      *
      * @param   string  $text
      * @return  string
      */
-    public function transform($text) 
+    public function transform($text)
     {
-        $less_than_tab = MarkdownExtended::getConfig('less_than_tab');
+        $less_than_tab = Kernel::getConfig('less_than_tab');
         // Re-usable pattern to match any entire dl list:
         $whole_list_re = '(?>
             (                                           # $1 = whole list
@@ -90,12 +88,12 @@ class DefinitionList
      * @param   array   $matches    The results form the `transform()` method
      * @return  string
      */
-    protected function _callback($matches) 
+    protected function _callback($matches)
     {
         // Re-usable patterns to match list item bullets and number markers:
         $result = trim(self::transformItems($matches[1]));
         $result = str_replace('<!--dt-->', '', $result);
-        $result = MarkdownExtended::get('OutputFormatBag')
+        $result = Kernel::get('OutputFormatBag')
 //            ->buildTag('definition_list', "\n$result\n");
             ->buildTag('definition_list', $result);
         return parent::hashBlock($result) . "\n\n";
@@ -109,9 +107,9 @@ class DefinitionList
      * @param   string  $list_str   The result string form the `_callback()` function
      * @return  string
      */
-    public function transformItems($list_str) 
+    public function transformItems($list_str)
     {
-        $less_than_tab = MarkdownExtended::getConfig('less_than_tab');      
+        $less_than_tab = Kernel::getConfig('less_than_tab');
         // trim trailing blank lines:
         $list_str = preg_replace("/\n{2,}\\z/", "\n", $list_str);
 
@@ -121,8 +119,8 @@ class DefinitionList
             (                                   # definition term = $1
                 [ ]{0,'.$less_than_tab.'}       # leading whitespace
                 (?![:][ ]|[ ])                  # negative lookahead for a definition mark (colon) or more whitespace.
-                (?> \S.* \n)+?                  # actual term (not whitespace). 
-            )           
+                (?> \S.* \n)+?                  # actual term (not whitespace).
+            )
             (?=\n?[ ]{0,3}:[ ])                 # lookahead for following line feed with a definition mark.
             }xm',
             array($this, '_item_callback_dt'), $list_str);
@@ -139,8 +137,8 @@ class DefinitionList
                 (?:                             # next term or end of text
                     [ ]{0,'.$less_than_tab.'} [:][ ]    |
                     <!--dt--> | \z
-                )                       
-            )                   
+                )
+            )
             }xm',
             array($this, '_item_callback_dd'), $list_str);
 
@@ -153,13 +151,13 @@ class DefinitionList
      * @param   array   $matches
      * @return  string
      */
-    protected function _item_callback_dt($matches) 
+    protected function _item_callback_dt($matches)
     {
         $terms = explode("\n", trim($matches[1]));
         $text = '';
         foreach ($terms as $term) {
-            $term = parent::runGamut('span_gamut', trim($term));
-            $text .= "\n" . MarkdownExtended::get('OutputFormatBag')
+            $term = Lexer::runGamut('span_gamut', trim($term));
+            $text .= "\n" . Kernel::get('OutputFormatBag')
                 ->buildTag('definition_list_item_term', $term);
         }
         return $text . "\n";
@@ -171,7 +169,7 @@ class DefinitionList
      * @param   array   $matches
      * @return  string
      */
-    protected function _item_callback_dd($matches) 
+    protected function _item_callback_dd($matches)
     {
         $leading_line   = $matches[1];
         $marker_space   = $matches[2];
@@ -180,20 +178,13 @@ class DefinitionList
         if ($leading_line || preg_match('/\n{2,}/', $def)) {
             // Replace marker with the appropriate whitespace indentation
             $def = str_repeat(' ', strlen($marker_space)) . $def;
-            $def = parent::runGamut('html_block_gamut', parent::runGamut('tool:Outdent', $def . "\n\n"));
+            $def = Lexer::runGamut('html_block_gamut', Lexer::runGamut(GamutLoader::TOOL_ALIAS.':Outdent', $def . "\n\n"));
 //            $def = "\n$def\n";
         } else {
             $def = rtrim($def);
-            $def = parent::runGamut('span_gamut', parent::runGamut('tool:Outdent', $def));
+            $def = Lexer::runGamut('span_gamut', Lexer::runGamut(GamutLoader::TOOL_ALIAS.':Outdent', $def));
         }
-/*
-        return "\n" . MarkdownExtended::get('OutputFormatBag')
-            ->buildTag('definition_list_item_definition', $def) . "\n";
-*/
-        return MarkdownExtended::get('OutputFormatBag')
-            ->buildTag('definition_list_item_definition', $def);
+        return /*"\n" .*/ Kernel::get('OutputFormatBag')
+            ->buildTag('definition_list_item_definition', $def)/* . "\n"*/;
     }
-
 }
-
-// Endfile

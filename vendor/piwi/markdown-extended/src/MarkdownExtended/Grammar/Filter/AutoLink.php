@@ -1,8 +1,8 @@
 <?php
 /*
- * This file is part of the PHP-MarkdownExtended package.
+ * This file is part of the PHP-Markdown-Extended package.
  *
- * (c) Pierre Cassat <me@e-piwi.fr> and contributors
+ * Copyright (c) 2008-2015, Pierre Cassat <me@e-piwi.fr> and contributors
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,20 +10,17 @@
 
 namespace MarkdownExtended\Grammar\Filter;
 
-use MarkdownExtended\MarkdownExtended;
-use MarkdownExtended\Grammar\Filter;
-use MarkdownExtended\Helper as MDE_Helper;
-use MarkdownExtended\Exception as MDE_Exception;
+use \MarkdownExtended\Grammar\Filter;
+use \MarkdownExtended\API\Kernel;
+use \MarkdownExtended\Grammar\Lexer;
+use \MarkdownExtended\Grammar\GamutLoader;
 
 /**
  * Process Markdown automatic links
- *
- * @package MarkdownExtended\Grammar\Filter
  */
 class AutoLink
     extends Filter
 {
-
     /**
      * @param   string  $text
      * @return  string
@@ -63,14 +60,14 @@ class AutoLink
      */
     protected function _url_callback($matches)
     {
-        $url = parent::runGamut('tool:EncodeAttribute', $matches[1]);
-        MarkdownExtended::getContent()->addUrl($url);
-        $block = MarkdownExtended::get('OutputFormatBag')
+        $url = Lexer::runGamut(GamutLoader::TOOL_ALIAS.':EncodeAttribute', $matches[1]);
+        Kernel::addConfig('urls', $url);
+
+        $block = Kernel::get('OutputFormatBag')
             ->buildTag('link', $url, array(
-                'href' => $url,
-                'title' => MDE_Helper::fillPlaceholders(
-                    MarkdownExtended::getConfig('link_mask_title'), $url)
+                'href'  => $url
             ));
+
         return parent::hashPart($block);
     }
 
@@ -81,18 +78,11 @@ class AutoLink
     protected function _email_callback($matches)
     {
         $address = $matches[1];
-        list($address_link, $address_text) = MDE_Helper::encodeEmailAddress($address);
-        MarkdownExtended::getContent()->addUrl($address_text);
-        $block = MarkdownExtended::get('OutputFormatBag')
-            ->buildTag('link', $address_text, array(
-                'email' => $address,
-                'href' => $address_link,
-                'title' => MDE_Helper::fillPlaceholders(
-                    MarkdownExtended::getConfig('mailto_mask_title'), $address_text)
+        Kernel::addConfig('urls', $address);
+        $block = Kernel::get('OutputFormatBag')
+            ->buildTag('link', $address, array(
+                'email' => $address
             ));
         return parent::hashPart($block);
     }
-
 }
-
-// Endfile
