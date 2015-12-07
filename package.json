@@ -1,6 +1,5 @@
 {
   "name": "mde-editor",
-  "version": "0.0.0",
   "author": "piwi <http://e-piwi.fr/>",
   "description": "MarkdownExtended web editor (based on EpicEditor)",
   "license": {
@@ -20,5 +19,5 @@
   "dependencies": {
     "epiceditor": "~0.2.3"
   },
-  "repository": "git@github.com:piwi/mde-editor.git"
+  "repository": "git@github.com:markdown-extended/mde-editor.git"
 }
