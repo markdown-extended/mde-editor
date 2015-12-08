@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/markdown-extended/mde-service.git",
-                "reference": "3c97545d0d99ced256f85712d97c6a52418ddcbe"
+                "reference": "31fc86ba7ae5e6466aa499547292ef6af7b97eb8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/markdown-extended/mde-service/zipball/3c97545d0d99ced256f85712d97c6a52418ddcbe",
-                "reference": "3c97545d0d99ced256f85712d97c6a52418ddcbe",
+                "url": "https://api.github.com/repos/markdown-extended/mde-service/zipball/31fc86ba7ae5e6466aa499547292ef6af7b97eb8",
+                "reference": "31fc86ba7ae5e6466aa499547292ef6af7b97eb8",
                 "shasum": ""
             },
             "require": {
@@ -31,7 +31,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.1.*-dev"
+                    "dev-master": "0.2.*-dev"
                 }
             },
             "autoload": {
@@ -56,7 +56,7 @@
                 "markdown-extended",
                 "webservice"
             ],
-            "time": "2015-12-07 12:30:29"
+            "time": "2015-12-08 08:12:49"
         },
         {
             "name": "piwi/markdown-extended",
@@ -64,12 +64,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/piwi/markdown-extended.git",
-                "reference": "50965fd8a93cb35d4c734fda7b80d13ca989a00f"
+                "reference": "bbc3788001cd2db6f54d45d1c65d71bea40b3d0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/piwi/markdown-extended/zipball/50965fd8a93cb35d4c734fda7b80d13ca989a00f",
-                "reference": "50965fd8a93cb35d4c734fda7b80d13ca989a00f",
+                "url": "https://api.github.com/repos/piwi/markdown-extended/zipball/bbc3788001cd2db6f54d45d1c65d71bea40b3d0c",
+                "reference": "bbc3788001cd2db6f54d45d1c65d71bea40b3d0c",
                 "shasum": ""
             },
             "require": {
@@ -131,7 +131,7 @@
                 "markdown extended",
                 "mde"
             ],
-            "time": "2015-08-31 05:09:52"
+            "time": "2015-12-08 08:07:50"
         }
     ],
     "packages-dev": [],
