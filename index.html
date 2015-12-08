@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
     <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <title>MDE-Editor</title>
+    <title>README</title>
     
 <style>
 html {
@@ -64,32 +64,44 @@ the markdown content of the editor (via a <strong>synchronous</strong> XMLHttpRe
 (the original content is not parsed in JavaScript).</p>
 
 <p>This editor is available online at <a href="http://dingus.aboutmde.org/" title="See online http://dingus.aboutmde.org/">http://dingus.aboutmde.org/</a>.</p>
-<h2 id="installation">Installation</h2><h3 id="manual_installation">Manual installation</h3>
+<h2 id="installation">Installation</h2><h3 id="manual-installation">Manual installation</h3>
 <p>To install and use it, you will need <a href="http://bower.io/" title="See online http://bower.io/">Bower</a> and <a href="http://getcomposer.org/" title="See online http://getcomposer.org/">Composer</a>:</p>
+
 <pre>wget --no-check-certificate https://github.com/markdown-extended/mde-editor/archive/master.tar.gz
 tar -xvf master.tar.gz
 cd mde-editor-master
 bower install
 composer install</pre>
+
 <p>Then you can browse the demonstration page: <a href="http://your.localhost/path/to/mde-editor-master/" title="See online http://your.localhost/path/to/mde-editor-master/">http://your.localhost/path/to/mde-editor-master/</a>.</p>
-<h3 id="usage_as_a_bower_dependency">Usage as a <em>Bower</em> dependency</h3>
+<h3 id="usage-as-a-bower-dependency">Usage as a <em>Bower</em> dependency</h3>
 <p>The <strong>MDE-Editor</strong> is registered into <a href="http://bower.io/search/?q=mde-editor" title="See online http://bower.io/search/?q=mde-editor">Bower</a>. BUT, as
 it remains on a PHP application, to get a "ready-to-use" editor (installed with the required
 PHP scripts), you MUST use the <code>bower</code> branch of the package as follows:</p>
+
 <pre>bower install mde-editor#bower --save</pre>
+
 <p>Or you may write in your <code>bower.json</code> configuration file:</p>
+
 <pre>"dependencies": {
     "mde-editor": "bower"
-}</pre><h2 id="usage">Usage</h2>
+}</pre>
+<h2 id="usage">Usage</h2>
 <p>Usage of the <strong>MDE-Editor</strong> is very similar to the one of <a href="http://epiceditor.com/#quick-start" title="See online http://epiceditor.com/#quick-start">EpicEditor</a>
 except that:</p>
 <ul><li>
 <p>you must include the <code>mde-editor.js</code> script AFTER the original <code>epiceditor(.min).js</code>:</p>
-<pre>&lt;script src="mde-editor/mde-editor.js"&gt;&lt;/script&gt;</pre></li><li>
+
+<pre>&lt;script src="mde-editor/mde-editor.js"&gt;&lt;/script&gt;</pre>
+</li><li>
 <p>you must create a <code>MdeEpicEditor</code> object instead of the original <code>EpicEditor</code>:</p>
-<pre>var editor = new MdeEpicEditor().load();</pre></li><li>
+
+<pre>var editor = new MdeEpicEditor().load();</pre>
+</li><li>
 <p>the default ID of the DOM block which will finally embed the editor is <code>mde-editor</code>:</p>
-<pre>&lt;div id="mde-editor"&gt;&lt;/div&gt;</pre></li></ul>
+
+<pre>&lt;div id="mde-editor"&gt;&lt;/div&gt;</pre>
+</li></ul>
 <p>If you move the package files, you NEED to keep the <code>mde_editor_interface.php</code> PHP script
 in the same directory as the <code>mde-editor.js</code> (or override the <code>parser_options</code> settings - 
 see below) and redefine the <code>basePath</code> option to fit your environment. You also need to 
@@ -97,6 +109,7 @@ redefine the <code>$autoloader</code> variable at the top of the <code>mde_edito
 <h2 id="options">Options</h2>
 <p>The default options of the <strong>MDE-Editor</strong> are (they will be merged with the 
 <a href="http://epiceditor.com/#epiceditoroptions" title="See online http://epiceditor.com/#epiceditoroptions">default EpicEditor options</a> in final object):</p>
+
 <pre>    container:  'mde-editor',
     basePath:   'bower_components/epiceditor/epiceditor/',
     autogrow:   true,
@@ -110,6 +123,7 @@ redefine the <code>$autoloader</code> variable at the top of the <code>mde_edito
         interface:   'mde-editor/mde_editor_interface.php',
         mdeOptions: {}
     }</pre>
+
 <p>The last <code>parserOptions</code> element concerns the MDE parser:</p>
 <ul><li>
 <p>the <code>parserOptions.silent</code> is a flag to see errors or not;</p>
@@ -127,8 +141,6 @@ entry must follow an <em>underscored</em> notation (no camel-case).</p>
 <p><strong>MDE-Editor</strong> is authored by Pierre Cassat and licensed under a MIT license.</p>
 
 <p>To transmit a bug or a feature request, see <a href="http://github.com/markdown-extended/mde-editor/issues" title="See online http://github.com/markdown-extended/mde-editor/issues">http://github.com/markdown-extended/mde-editor/issues</a>.</p>
-
-
         
     </div>
 
